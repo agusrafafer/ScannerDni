@@ -20,7 +20,7 @@ angular.module('app.controllers', [])
                                 function (result) {
                                     $ionicLoading.hide();
                                     $scope.var.textoLeido = result.text;
-                                    $scope.var.textoLeido = result.format;
+                                    $scope.var.formatoLeido = result.format;
 
                                     $ionicPopup.alert({
                                         title: 'Info',
