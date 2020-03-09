@@ -75,35 +75,36 @@ angular.module('app.controllers', [])
                     }
 
                     let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
-                    $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
                     contenidoCsv += $scope.var.textoLeido + '\n';
 
-
-                    let filename = 'listados-dnis.csv';
-                    let contentType = 'text/plain';
-
-                    let linkElement = document.createElement('a');
-                    try {
-                        let blob = new Blob([$scope.var.textoLeido], {type: contentType});
-                        let url = $window.URL.createObjectURL(blob);
-
-                        linkElement.setAttribute('href', url);
-                        linkElement.setAttribute("download", filename);
-
-                        let clickEvent = new MouseEvent("click", {
-                            "view": window,
-                            "bubbles": true,
-                            "cancelable": false
-                        });
-                        linkElement.dispatchEvent(clickEvent);
-                        $ionicLoading.hide();
-                    } catch (ex) {
-                        $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Info',
-                            template: '<b>Tuvimos un inconveniente: </b>' + ex
-                        });
-                    }
+                    let $linkDescarga = document.getElementById("lnkDescarga");
+                    $linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
+                    $ionicLoading.hide();
+//                    let filename = 'listados-dnis.csv';
+//                    let contentType = 'text/plain';
+//
+//                    let linkElement = document.createElement('a');
+//                    try {
+//                        let blob = new Blob([$scope.var.textoLeido], {type: contentType});
+//                        let url = $window.URL.createObjectURL(blob);
+//
+//                        linkElement.setAttribute('href', url);
+//                        linkElement.setAttribute("download", filename);
+//
+//                        let clickEvent = new MouseEvent("click", {
+//                            "view": window,
+//                            "bubbles": true,
+//                            "cancelable": false
+//                        });
+//                        linkElement.dispatchEvent(clickEvent);
+//                        $ionicLoading.hide();
+//                    } catch (ex) {
+//                        $ionicLoading.hide();
+//                        $ionicPopup.alert({
+//                            title: 'Info',
+//                            template: '<b>Tuvimos un inconveniente: </b>' + ex
+//                        });
+//                    }
 
                 };
 
