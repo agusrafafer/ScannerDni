@@ -1,9 +1,9 @@
 angular.module('app.controllers', [])
 
-        .controller('ingresoCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$window', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+        .controller('ingresoCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $window) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document) {
 
                 $scope.var = {
                     textoLeido: '',
@@ -78,8 +78,8 @@ angular.module('app.controllers', [])
                         let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
                         contenidoCsv += $scope.var.textoLeido + '\n';
 
-                        let $linkDescarga = document.getElementById("lnkDescarga");
-                        $linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
+                        let linkDescarga = $document[0].getElementById("lnkDescarga");
+                        linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
                         $ionicLoading.hide();
                     } catch (ex) {
                         $ionicLoading.hide();
