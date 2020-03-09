@@ -1,9 +1,9 @@
 angular.module('app.controllers', [])
 
-        .controller('ingresoCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+        .controller('ingresoCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window) {
 
                 $scope.var = {
                     textoLeido: '',
@@ -70,16 +70,39 @@ angular.module('app.controllers', [])
                     });
 
                     try {
-                        if ($scope.var.textoLeido.length <= 0) {
-                            $ionicLoading.hide();
-                            return;
+//                        if ($scope.var.textoLeido.length <= 0) {
+//                            $ionicLoading.hide();
+//                            return;
+//                        }
+
+                        let today = new Date();
+                        let dd = today.getDate();
+
+                        let mm = today.getMonth() + 1;
+                        let yyyy = today.getFullYear();
+                        if (dd < 10)
+                        {
+                            dd = '0' + dd;
                         }
+
+                        if (mm < 10)
+                        {
+                            mm = '0' + mm;
+                        }
+                        today = dd + '-' + mm + '-' + yyyy;
 
                         let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
                         contenidoCsv += $scope.var.textoLeido + '\n';
 
                         let linkDescarga = $document[0].getElementById("lnkDescarga");
-                        linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
+                        linkDescarga.setAttribute("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv));
+                        linkDescarga.setAttribute("download", 'listado_' + today + '.csv');
+                        let clickEvent = new MouseEvent("click", {
+                            "view": $window,
+                            "bubbles": true,
+                            "cancelable": false
+                        });
+                        linkDescarga.dispatchEvent(clickEvent);
                         $ionicLoading.hide();
                     } catch (ex) {
                         $ionicLoading.hide();
