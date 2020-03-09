@@ -21,12 +21,13 @@ angular.module('app.controllers', [])
                                     $ionicLoading.hide();
                                     $scope.var.textoLeido = result.text;
                                     $scope.var.formatoLeido = result.format;
-
+                                    $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
+                                    
                                     $ionicPopup.alert({
                                         title: 'Info',
                                         template: 'Escaneo exitoso: \n' +
                                                 'Resultado: ' + $scope.var.textoLeido + "\n" +
-                                                'Formato: ' + $scope.var.textoLeido + "\n" +
+                                                'Formato: ' + $scope.var.formatoLeido + "\n" +
                                                 'Cancelado: ' + result.cancelled
                                     });
                                 },
