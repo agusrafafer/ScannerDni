@@ -13,10 +13,10 @@
       <div class="title">Menu</div>
     </ion-header-bar>
     <ion-content padding="false" class="side-menu-left has-header ">
-      <ion-list id="menu-list1">
+      <ion-list id="menu-list1" ng-controller="ingresoCtrl">
         <ion-item id="menu-list-item1" ui-sref="menu.ingreso()" menu-close="">Ingreso</ion-item>
-        <ion-item id="menu-list-item2" ui-sref="menu.escanearDNI()" menu-close="">Escanear DNI</ion-item>
-        <ion-item id="menu-list-item3" ui-sref="menu.enviar()" menu-close="">Enviar</ion-item>
+        <ion-item id="menu-list-item2" ng-click="abrirEscaner()" menu-close="">Escanear DNI</ion-item>
+        <ion-item id="menu-list-item3" ng-click="descargarArchivo()" menu-close="">Descargar archivo</ion-item>
       </ion-list>
     </ion-content>
   </ion-side-menu>

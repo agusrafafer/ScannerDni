@@ -1,9 +1,7 @@
 <ion-view title="Ingreso" id="page1">
   <ion-content padding="true" style="background: url(img/Y1D1ggZyQHuBWdybC1km_Mujer-3.jpg) no-repeat center;background-size:cover;" class="has-header">
-    <button id="ingreso-button1" 
-            class="button button-dark button-block icon-left ion-qr-scanner"
-            ng-click="abrirEscaner()">Escanear DNI</button>
+    <button class="button button-dark button-block icon-left ion-qr-scanner" ng-click="abrirEscaner()">Abrir escaner</button>
     <div class="spacer" style="width: 300px; height: 5px;"></div>
-    <button id="ingreso-button2" class="button button-light button-block icon-left ion-android-send">Enviar</button>
+    <button class="button button-light button-block icon-left ion-android-download" ng-click="descargarArchivo()">Descargar archivo</button>
   </ion-content>
 </ion-view>
