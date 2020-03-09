@@ -22,7 +22,7 @@ angular.module('app.controllers', [])
                                     $scope.var.textoLeido = result.text;
                                     $scope.var.formatoLeido = result.format;
                                     $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
-                                    
+
                                     $ionicPopup.alert({
                                         title: 'Info',
                                         template: 'Escaneo exitoso: \n' +
@@ -69,17 +69,25 @@ angular.module('app.controllers', [])
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
 
-                    if ($scope.var.textoLeido.length <= 0) {
+                    try {
+                        if ($scope.var.textoLeido.length <= 0) {
+                            $ionicLoading.hide();
+                            return;
+                        }
+
+                        let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
+                        contenidoCsv += $scope.var.textoLeido + '\n';
+
+                        let $linkDescarga = document.getElementById("lnkDescarga");
+                        $linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
                         $ionicLoading.hide();
-                        return;
+                    } catch (ex) {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'Info',
+                            template: '<b>Tuvimos un inconveniente: </b>' + ex
+                        });
                     }
-
-                    let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
-                    contenidoCsv += $scope.var.textoLeido + '\n';
-
-                    let $linkDescarga = document.getElementById("lnkDescarga");
-                    $linkDescarga.attr("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv))[0].click();
-                    $ionicLoading.hide();
 //                    let filename = 'listados-dnis.csv';
 //                    let contentType = 'text/plain';
 //
