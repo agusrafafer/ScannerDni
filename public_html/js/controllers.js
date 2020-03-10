@@ -7,7 +7,8 @@ angular.module('app.controllers', [])
 
                 $scope.var = {
                     textoLeido: '',
-                    formatoLeido: ''
+                    formatoLeido: '',
+                    contenidoCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n'
                 };
 
                 $scope.abrirEscaner = function () {
@@ -59,58 +60,102 @@ angular.module('app.controllers', [])
 
 
                 $scope.descargarArchivo = function () {
-//                    $ionicPopup.alert({
-//                        title: 'Info',
-//                        template: 'Proximamente!'
-//                    });
-
 
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
 
-                    try {
-//                        if ($scope.var.textoLeido.length <= 0) {
-//                            $ionicLoading.hide();
-//                            return;
-//                        }
+                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
-                        let today = new Date();
-                        let dd = today.getDate();
+                        //console.log('file system open: ' + fs.name);
+                        fs.root.getFile("listado.csv", {create: true, exclusive: false}, function (fileEntry) {
 
-                        let mm = today.getMonth() + 1;
-                        let yyyy = today.getFullYear();
-                        if (dd < 10)
-                        {
-                            dd = '0' + dd;
-                        }
+//                            console.log("fileEntry is file?" + fileEntry.isFile.toString());
+                            // fileEntry.name == 'someFile.txt'
+                            // fileEntry.fullPath == '/someFile.txt'
+                            fileEntry.createWriter(function (fileWriter) {
 
-                        if (mm < 10)
-                        {
-                            mm = '0' + mm;
-                        }
-                        today = dd + '-' + mm + '-' + yyyy;
+                                fileWriter.onwriteend = function () {
+                                    $ionicPopup.alert({
+                                        title: 'Info',
+                                        template: 'Archivo creado con exito'
+                                    });
+                                    //readFile(fileEntry);
 
-                        let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
-                        contenidoCsv += $scope.var.textoLeido + '\n';
+                                };
 
-                        let linkDescarga = $document[0].getElementById("lnkDescarga");
-                        linkDescarga.setAttribute("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv));
-                        linkDescarga.setAttribute("download", 'listado_' + today + '.csv');
-                        let clickEvent = new MouseEvent("click", {
-                            "view": $window,
-                            "bubbles": true,
-                            "cancelable": false
+                                fileWriter.onerror = function (e) {
+                                    $ionicPopup.alert({
+                                        title: 'Info',
+                                        template: 'Error: ' + e.toString()
+                                    });
+                                };
+
+                                // If data object is not passed in,
+                                // create a new Blob instead.
+                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+//                                if (!dataObj) {
+                                let dataObj = new Blob($scope.var.contenidoCsv, {type: 'text/plain'});
+//                                }
+
+                                fileWriter.write(dataObj);
+                            });
+
+                        }, function (errorCreateFile) {
+                            $ionicPopup.alert({
+                                title: 'Info',
+                                template: errorCreateFile.toString()
+                            });
                         });
-                        linkDescarga.dispatchEvent(clickEvent);
-                        $ionicLoading.hide();
-                    } catch (ex) {
-                        $ionicLoading.hide();
+                    }, function (errorLoadFs) {
                         $ionicPopup.alert({
                             title: 'Info',
-                            template: '<b>Tuvimos un inconveniente: </b>' + ex
+                            template: errorLoadFs.toString()
                         });
-                    }
+                    });
+
+//                    try {
+////                        if ($scope.var.textoLeido.length <= 0) {
+////                            $ionicLoading.hide();
+////                            return;
+////                        }
+//
+//                        let today = new Date();
+//                        let dd = today.getDate();
+//
+//                        let mm = today.getMonth() + 1;
+//                        let yyyy = today.getFullYear();
+//                        if (dd < 10)
+//                        {
+//                            dd = '0' + dd;
+//                        }
+//
+//                        if (mm < 10)
+//                        {
+//                            mm = '0' + mm;
+//                        }
+//                        today = dd + '-' + mm + '-' + yyyy;
+//
+//                        let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
+//                        contenidoCsv += $scope.var.textoLeido + '\n';
+//
+//                        let linkDescarga = $document[0].getElementById("lnkDescarga");
+//                        linkDescarga.setAttribute("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv));
+//                        linkDescarga.setAttribute("download", 'listado_' + today + '.csv');
+//                        let clickEvent = new MouseEvent("click", {
+//                            "view": $window,
+//                            "bubbles": true,
+//                            "cancelable": false
+//                        });
+//                        linkDescarga.dispatchEvent(clickEvent);
+//                        $ionicLoading.hide();
+//                    } catch (ex) {
+//                        $ionicLoading.hide();
+//                        $ionicPopup.alert({
+//                            title: 'Info',
+//                            template: '<b>Tuvimos un inconveniente: </b>' + ex
+//                        });
+//                    }
 //                    let filename = 'listados-dnis.csv';
 //                    let contentType = 'text/plain';
 //
