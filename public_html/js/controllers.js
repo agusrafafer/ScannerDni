@@ -76,6 +76,7 @@ angular.module('app.controllers', [])
                             fileEntry.createWriter(function (fileWriter) {
 
                                 fileWriter.onwriteend = function () {
+                                    $ionicLoading.hide();
                                     $ionicPopup.alert({
                                         title: 'Info',
                                         template: 'Archivo creado con exito'
@@ -85,6 +86,7 @@ angular.module('app.controllers', [])
                                 };
 
                                 fileWriter.onerror = function (e) {
+                                    $ionicLoading.hide();
                                     $ionicPopup.alert({
                                         title: 'Info',
                                         template: 'Error: ' + e.toString()
@@ -102,12 +104,14 @@ angular.module('app.controllers', [])
                             });
 
                         }, function (errorCreateFile) {
+                            $ionicLoading.hide();
                             $ionicPopup.alert({
                                 title: 'Info',
                                 template: errorCreateFile.toString()
                             });
                         });
                     }, function (errorLoadFs) {
+                        $ionicLoading.hide();
                         $ionicPopup.alert({
                             title: 'Info',
                             template: errorLoadFs.toString()
