@@ -117,6 +117,7 @@ angular.module('app.controllers', [])
                             template: errorLoadFs.toString()
                         });
                     });
+                    $ionicLoading.hide();
 
 //                    try {
 ////                        if ($scope.var.textoLeido.length <= 0) {
