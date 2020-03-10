@@ -69,12 +69,23 @@ angular.module('app.controllers', [])
 
                     window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
                         $ionicLoading.hide();
-                        alert("got main dir: " + JSON.stringify(dir));
+                        //alert("got main dir: " + JSON.stringify(dir));
                         dir.getFile("log.txt", {create: true}, function (file) {
                             alert("got the file: " + JSON.stringify(file));
                             $scope.var.csvFile = file;
 //                            writeLog("App started");
-//                            $ionicLoading.hide();   
+//                            $ionicLoading.hide();  
+                            $scope.var.csvFile.createWriter(function (fileWriter) {
+
+                                fileWriter.seek(fileWriter.length);
+                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+                                
+                                var blob = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
+                                fileWriter.write(blob);
+                                alert("ok, in theory i worked");
+                            }, function(error) {
+                                alert(error.toString());
+                            });
                         });
                     });
 
