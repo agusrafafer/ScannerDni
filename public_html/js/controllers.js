@@ -70,7 +70,7 @@ angular.module('app.controllers', [])
                         //console.log('file system open: ' + fs.name);
                         fs.root.getFile("listado.csv", {create: true, exclusive: false}, function (fileEntry) {
 
-//                            console.log("fileEntry is file?" + fileEntry.isFile.toString());
+                            alert("fileEntry is file?" + fileEntry.isFile.toString());
                             // fileEntry.name == 'someFile.txt'
                             // fileEntry.fullPath == '/someFile.txt'
                             fileEntry.createWriter(function (fileWriter) {
