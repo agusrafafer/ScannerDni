@@ -66,12 +66,16 @@ angular.module('app.controllers', [])
                                     $scope.var.formatoLeido = result.format;
                                     $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
 
+                                    $scope.guardarArchivo(false);
+
+                                    let vecTextoLeido = $scope.var.textoLeido.split(";");
+                                    
                                     $ionicPopup.alert({
                                         title: 'Info',
                                         template: 'Escaneo exitoso: \n' +
-                                                'Resultado: ' + $scope.var.textoLeido + "\n" +
-                                                'Formato: ' + $scope.var.formatoLeido + "\n" +
-                                                'Cancelado: ' + result.cancelled
+                                                'DNI: ' + vecTextoLeido[4] + "\n" +
+                                                'Apellido: ' + vecTextoLeido[1] + "\n" +
+                                                'Nombre: ' + vecTextoLeido[2] 
                                     });
                                 },
                                 function (error) {
@@ -101,7 +105,7 @@ angular.module('app.controllers', [])
                 };
 
 
-                $scope.descargarArchivo = function () {
+                $scope.guardarArchivo = function (mostrarMsjExito) {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
@@ -113,12 +117,12 @@ angular.module('app.controllers', [])
 
                                 fileWriter.onwriteend = function () {
                                     $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Info',
-                                        template: 'Archivo creado con exito en: ' + fileEntry.fullPath + '/' + fileEntry.name
-                                    });
-                                    //readFile(fileEntry);
-
+                                    if (mostrarMsjExito) {
+                                        $ionicPopup.alert({
+                                            title: 'Info',
+                                            template: 'Archivo creado con exito en: ' + fileEntry.fullPath
+                                        });
+                                    }
                                 };
 
                                 fileWriter.onerror = function (e) {
@@ -150,63 +154,7 @@ angular.module('app.controllers', [])
                         });
                     });
                     $ionicLoading.hide();
-
-//                    try {
-////                        if ($scope.var.textoLeido.length <= 0) {
-////                            $ionicLoading.hide();
-////                            return;
-////                        }
-
-
-//
-//                        let contenidoCsv = 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n';
-//                        contenidoCsv += $scope.var.textoLeido + '\n';
-//
-//                        let linkDescarga = $document[0].getElementById("lnkDescarga");
-//                        linkDescarga.setAttribute("href", 'data:Application/octet-stream,' + encodeURIComponent(contenidoCsv));
-//                        linkDescarga.setAttribute("download", 'listado_' + today + '.csv');
-//                        let clickEvent = new MouseEvent("click", {
-//                            "view": $window,
-//                            "bubbles": true,
-//                            "cancelable": false
-//                        });
-//                        linkDescarga.dispatchEvent(clickEvent);
-//                        $ionicLoading.hide();
-//                    } catch (ex) {
-//                        $ionicLoading.hide();
-//                        $ionicPopup.alert({
-//                            title: 'Info',
-//                            template: '<b>Tuvimos un inconveniente: </b>' + ex
-//                        });
-//                    }
-//                    let filename = 'listados-dnis.csv';
-//                    let contentType = 'text/plain';
-//
-//                    let linkElement = document.createElement('a');
-//                    try {
-//                        let blob = new Blob([$scope.var.textoLeido], {type: contentType});
-//                        let url = $window.URL.createObjectURL(blob);
-//
-//                        linkElement.setAttribute('href', url);
-//                        linkElement.setAttribute("download", filename);
-//
-//                        let clickEvent = new MouseEvent("click", {
-//                            "view": window,
-//                            "bubbles": true,
-//                            "cancelable": false
-//                        });
-//                        linkElement.dispatchEvent(clickEvent);
-//                        $ionicLoading.hide();
-//                    } catch (ex) {
-//                        $ionicLoading.hide();
-//                        $ionicPopup.alert({
-//                            title: 'Info',
-//                            template: '<b>Tuvimos un inconveniente: </b>' + ex
-//                        });
-//                    }
-
                 };
-
             }])
 
         .controller('escanearDNICtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
