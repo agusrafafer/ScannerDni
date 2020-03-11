@@ -67,10 +67,10 @@ angular.module('app.controllers', [])
                     });
 
 
-                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
+                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, 1024*1024, function (dir) {
                         $ionicLoading.hide();
                         //alert("got main dir: " + JSON.stringify(dir));
-                        dir.getFile("log.txt", {create: true}, function (file) {
+                        dir.getFile("logScanner.txt", {create: true}, function (file) {
                             alert("got the file: " + JSON.stringify(file));
                             $scope.var.csvFile = file;
 //                            writeLog("App started");
