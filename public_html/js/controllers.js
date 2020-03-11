@@ -121,7 +121,7 @@ angular.module('app.controllers', [])
                                 // create a new Blob instead.
                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
 //                                if (!dataObj) {
-                                let dataObj = new Blob($scope.var.contenidoCsv, {type: 'text/plain'});
+                                let dataObj = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
 //                                }
 
                                 fileWriter.write(dataObj);
