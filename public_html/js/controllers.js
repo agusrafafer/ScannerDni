@@ -82,9 +82,9 @@ angular.module('app.controllers', [])
                                     });
                                 },
                                 {
-                                    preferFrontCamera: false, // iOS and Android
-                                    showFlipCameraButton: true, // iOS and Android
-                                    showTorchButton: true, // iOS and Android
+                                    preferFrontCamera: false, // iOS y Android
+                                    showFlipCameraButton: true, // iOS y Android
+                                    showTorchButton: true, // iOS y Android
                                     torchOn: true, // Android, launch with the torch switched on (if available)
                                     saveHistory: true, // Android, save scan history (default false)
                                     prompt: "Por favor acerque el DNI a la camara para realizar el escaneo", // Android
