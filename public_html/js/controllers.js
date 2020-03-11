@@ -67,80 +67,80 @@ angular.module('app.controllers', [])
                     });
 
 
-                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, 1024*1024, function (dir) {
-                        $ionicLoading.hide();
-                        //alert("got main dir: " + JSON.stringify(dir));
-                        dir.getFile("logScanner.txt", {create: true}, function (file) {
-                            alert("got the file: " + JSON.stringify(file));
-                            $scope.var.csvFile = file;
-//                            writeLog("App started");
-//                            $ionicLoading.hide();  
-                            $scope.var.csvFile.createWriter(function (fileWriter) {
-
-                                fileWriter.seek(fileWriter.length);
-                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
-                                
-                                var blob = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
-                                fileWriter.write(blob);
-                                alert("ok, in theory i worked");
-                            }, function(error) {
-                                alert(error.toString());
-                            });
-                        });
-                    });
-
-//                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-//
-//                        //console.log('file system open: ' + fs.name);
-//                        fs.root.getFile("listado.csv", {create: true, exclusive: false}, function (fileEntry) {
-//
-//                            alert("fileEntry is file?" + fileEntry.isFile.toString());
-//                            // fileEntry.name == 'someFile.txt'
-//                            // fileEntry.fullPath == '/someFile.txt'
-//                            fileEntry.createWriter(function (fileWriter) {
-//
-//                                fileWriter.onwriteend = function () {
-//                                    $ionicLoading.hide();
-//                                    $ionicPopup.alert({
-//                                        title: 'Info',
-//                                        template: 'Archivo creado con exito'
-//                                    });
-//                                    //readFile(fileEntry);
-//
-//                                };
-//
-//                                fileWriter.onerror = function (e) {
-//                                    $ionicLoading.hide();
-//                                    $ionicPopup.alert({
-//                                        title: 'Info',
-//                                        template: 'Error: ' + e.toString()
-//                                    });
-//                                };
-//
-//                                // If data object is not passed in,
-//                                // create a new Blob instead.
-//                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
-////                                if (!dataObj) {
-//                                let dataObj = new Blob($scope.var.contenidoCsv, {type: 'text/plain'});
-////                                }
-//
-//                                fileWriter.write(dataObj);
-//                            });
-//
-//                        }, function (errorCreateFile) {
-//                            $ionicLoading.hide();
-//                            $ionicPopup.alert({
-//                                title: 'Info',
-//                                template: errorCreateFile.toString()
-//                            });
-//                        });
-//                    }, function (errorLoadFs) {
+//                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
 //                        $ionicLoading.hide();
-//                        $ionicPopup.alert({
-//                            title: 'Info',
-//                            template: errorLoadFs.toString()
+//                        //alert("got main dir: " + JSON.stringify(dir));
+//                        dir.getFile("logScanner.txt", {create: true}, function (file) {
+//                            alert("got the file: " + JSON.stringify(file));
+//                            $scope.var.csvFile = file;
+////                            writeLog("App started");
+////                            $ionicLoading.hide();  
+//                            $scope.var.csvFile.createWriter(function (fileWriter) {
+//
+//                                fileWriter.seek(fileWriter.length);
+//                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+//                                
+//                                var blob = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
+//                                fileWriter.write(blob);
+//                                alert("ok, in theory i worked");
+//                            }, function(error) {
+//                                alert(error.toString());
+//                            });
 //                        });
 //                    });
+
+                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+                        alert('file system open: ' + + JSON.stringify(fs));
+                        fs.root.getFile("listado.csv", {create: true, exclusive: false}, function (fileEntry) {
+
+                            alert("fileEntry is file?" + fileEntry.isFile.toString());
+                            // fileEntry.name == 'someFile.txt'
+                            // fileEntry.fullPath == '/someFile.txt'
+                            fileEntry.createWriter(function (fileWriter) {
+
+                                fileWriter.onwriteend = function () {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Info',
+                                        template: 'Archivo creado con exito'
+                                    });
+                                    //readFile(fileEntry);
+
+                                };
+
+                                fileWriter.onerror = function (e) {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Info',
+                                        template: 'Error: ' + e.toString()
+                                    });
+                                };
+
+                                // If data object is not passed in,
+                                // create a new Blob instead.
+                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+//                                if (!dataObj) {
+                                let dataObj = new Blob($scope.var.contenidoCsv, {type: 'text/plain'});
+//                                }
+
+                                fileWriter.write(dataObj);
+                            });
+
+                        }, function (errorCreateFile) {
+                            $ionicLoading.hide();
+                            $ionicPopup.alert({
+                                title: 'Info',
+                                template: errorCreateFile.toString()
+                            });
+                        });
+                    }, function (errorLoadFs) {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'Info',
+                            template: errorLoadFs.toString()
+                        });
+                    });
                     $ionicLoading.hide();
 
 //                    try {
