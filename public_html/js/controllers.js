@@ -119,7 +119,7 @@ angular.module('app.controllers', [])
                         //var isAppend = true;
                         //createFile(dirEntry, "fileToAppend.txt", isAppend);
 
-                        $scope.var.pathCsv = fileEntry.fullPath;
+                        $scope.var.pathCsv = fileEntry.toURL();
                         
                         fileEntry.createWriter(function (fileWriter) {
 
