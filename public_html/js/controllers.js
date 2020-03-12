@@ -158,6 +158,27 @@ angular.module('app.controllers', [])
                     });
                     $ionicLoading.hide();
                 };
+
+
+                $scope.subirArchivo = function () {
+                    window.cordova.plugin.ftp.connect('ftp.agurait.com', 'escaner', 'escaner', function (ok) {
+                        alert("ftp: connect ok=" + ok);
+
+                        // You can do any ftp actions from now on...
+                        window.cordova.plugin.ftp.upload('/listado.csv', '/listado.csv', function (percent) {
+                            if (percent == 1) {
+                                alert("ftp: upload finalizado");
+                            } else {
+                                //alert("ftp: upload porcentaje=" + percent * 100 + "%");
+                            }
+                        }, function (error) {
+                            alert("ftp: upload error=" + error);
+                        });
+
+                    }, function (error) {
+                        alert("ftp: connect error=" + error);
+                    });
+                };
             }])
 
         .controller('escanearDNICtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
