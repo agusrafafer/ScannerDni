@@ -165,7 +165,7 @@ angular.module('app.controllers', [])
                         alert("ftp: connect ok=" + ok);
 
                         // You can do any ftp actions from now on...
-                        window.cordova.plugin.ftp.upload('/listado.csv', '/listado.csv', function (percent) {
+                        window.cordova.plugin.ftp.upload('/listado.csv', 'listado.csv', function (percent) {
                             if (percent == 1) {
                                 alert("ftp: upload finalizado");
                             } else {
