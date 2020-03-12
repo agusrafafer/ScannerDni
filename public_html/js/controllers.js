@@ -167,7 +167,7 @@ angular.module('app.controllers', [])
                         alert("ftp: connect ok=" + ok);
 
                         // You can do any ftp actions from now on...
-                        cordova.plugin.ftp.upload($scope.var.pathCsv, './listado.csv', function (percent) {
+                        cordova.plugin.ftp.upload($scope.var.pathCsv, '/listado1.csv', function (percent) {
                             if (percent === 1) {
                                 alert("ftp: upload finalizado");
                             } else {
