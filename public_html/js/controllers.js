@@ -161,7 +161,7 @@ angular.module('app.controllers', [])
 
 
                 $scope.subirArchivo = function () {
-                    window.cordova.plugin.ftp.connect('ftp.agurait.com', 'escaner', 'escaner', function (ok) {
+                    window.cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
                         alert("ftp: connect ok=" + ok);
 
                         // You can do any ftp actions from now on...
