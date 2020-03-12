@@ -8,7 +8,8 @@ angular.module('app.controllers', [])
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    contenidoCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n'
+                    contenidoCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n',
+                    pathCsv: ''
                 };
 
 
@@ -116,6 +117,7 @@ angular.module('app.controllers', [])
                         fs.root.getFile("listado.csv", {create: true, exclusive: false}, function (fileEntry) {
                             // fileEntry.name == 'someFile.txt'
                             // fileEntry.fullPath == '/someFile.txt'
+                            $scope.var.pathCsv = fileEntry.fullPath;
                             fileEntry.createWriter(function (fileWriter) {
 
                                 fileWriter.onwriteend = function () {
@@ -161,12 +163,12 @@ angular.module('app.controllers', [])
 
 
                 $scope.subirArchivo = function () {
-                    window.cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
+                    cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
                         alert("ftp: connect ok=" + ok);
 
                         // You can do any ftp actions from now on...
-                        window.cordova.plugin.ftp.upload('/listado.csv', 'listado.csv', function (percent) {
-                            if (percent == 1) {
+                        cordova.plugin.ftp.upload($scope.var.pathCsv, '/escaner/listado.csv', function (percent) {
+                            if (percent === 1) {
                                 alert("ftp: upload finalizado");
                             } else {
                                 //alert("ftp: upload porcentaje=" + percent * 100 + "%");
