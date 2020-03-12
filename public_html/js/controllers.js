@@ -114,7 +114,7 @@ angular.module('app.controllers', [])
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
 
-                    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (fileEntry) {
+                    window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (fileEntry) {
                         //console.log('file system open: ' + dirEntry.name);
                         //var isAppend = true;
                         //createFile(dirEntry, "fileToAppend.txt", isAppend);
