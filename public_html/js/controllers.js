@@ -66,17 +66,20 @@ angular.module('app.controllers', [])
                                     $scope.var.formatoLeido = result.format;
                                     $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
 
-                                    $scope.guardarArchivo(false);
+                                    if ($scope.var.textoLeido !== '') {
+                                        $scope.guardarArchivo(false);
 
-                                    let vecTextoLeido = $scope.var.textoLeido.split(";");
-                                    
-                                    $ionicPopup.alert({
-                                        title: 'Info',
-                                        template: 'Escaneo exitoso: \n' +
-                                                'DNI: ' + vecTextoLeido[4] + "\n" +
-                                                'Apellido: ' + vecTextoLeido[1] + "\n" +
-                                                'Nombre: ' + vecTextoLeido[2] 
-                                    });
+                                        let vecTextoLeido = $scope.var.textoLeido.split(";");
+
+                                        $ionicPopup.alert({
+                                            title: 'Info',
+                                            template: 'Escaneo exitoso: <br/>' +
+                                                    'DNI: ' + vecTextoLeido[4] + "<br/>" +
+                                                    'Apellido: ' + vecTextoLeido[1] + "<br/>" +
+                                                    'Nombre: ' + vecTextoLeido[2]
+                                        });
+                                    }
+
                                 },
                                 function (error) {
                                     $ionicLoading.hide();
