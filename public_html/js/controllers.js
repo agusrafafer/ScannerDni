@@ -61,10 +61,11 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.csv2Objeto = function (contenidoCsv) {
-                    let vecLineas = contenidoCsv.split('\n');
+                    let vecLineas = contenidoCsv.split("\n");
+                    personaFactory.personas = [];
                     //i=1 para evitar la cabecera
                     for (let i = 1; i < vecLineas.length; i++) {
-                        let linea = vecLineas[i].split(';');
+                        let linea = vecLineas[i].split(";");
                         personaFactory.personas.push({
                             TRAMITE: linea[0],
                             APELLIDO: linea[1],
@@ -104,7 +105,10 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
-                                            $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
+                                            $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+                                            if($scope.var.contenidoCsv === ''){
+                                                $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
+                                            }
                                         } else {
                                             for (let i = 0; i < personaFactory.personas.length; i++) {
                                                 if (personaFactory.personas[i].DNI !== vecTextoLeido[4]) {
