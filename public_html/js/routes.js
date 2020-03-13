@@ -14,17 +14,17 @@ angular.module('app.routes', [])
     views: {
       'side-menu21': {
         templateUrl: 'templates/ingreso.html',
-        controller: 'ingresoCtrl'
+        controller: 'escanerCtrl'
       }
     }
   })
 
-  .state('menu.escanearDNI', {
-    url: '/escanerDni',
+  .state('menu.listado', {
+    url: '/listado',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/escanearDNI.html',
-        controller: 'escanearDNICtrl'
+        templateUrl: 'templates/listado.html',
+        controller: 'escanerCtrl'
       }
     }
   })
@@ -34,7 +34,7 @@ angular.module('app.routes', [])
     views: {
       'side-menu21': {
         templateUrl: 'templates/enviar.html',
-        controller: 'enviarCtrl'
+        controller: 'escanerCtrl'
       }
     }
   })

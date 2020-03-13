@@ -1,0 +1,17 @@
+<ion-view title="Listado de DNI's" id="page2">
+    <ion-content padding="true" class="has-header">
+        <ion-list>            
+            <ion-item class="item-icon-right" ng-class="persona.SEXO === 'F'?'royal':'balanced'" ng-repeat="persona in var.vecPersonas">
+                <h2>DNI: {{persona.DNI}}</h2>
+                <p>Apellido: {{persona.APELLIDO}}</p>
+                <p>Nombre: {{persona.NOMBRE}}</p>
+                <p>Sexo: {{persona.SEXO}}</p>
+                <i class="icon ion-android-person icon-accessory"></i>
+            </ion-item>
+            <ion-item ng-hide="var.vecPersonas.length">
+                <h2>Listado vacio</h2>
+                <p>No posee escaneos cargados</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
