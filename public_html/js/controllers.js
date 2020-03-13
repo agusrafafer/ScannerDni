@@ -86,7 +86,7 @@ angular.module('app.controllers', [])
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
                                         } else {
-                                            for (var i = 0; i < personaFactory.personas.length; i++) {
+                                            for (let i = 0; i < personaFactory.personas.length; i++) {
                                                 if (personaFactory.personas[i].DNI !== vecTextoLeido[4]) {
                                                     personaFactory.personas.push({
                                                         TRAMITE: vecTextoLeido[0],
