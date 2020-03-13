@@ -7,7 +7,8 @@ angular.module('app.controllers', [])
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    contenidoCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n',
+                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n',
+                    contenidoCsv: '',
                     pathCsv: ''
                 };
 
@@ -26,6 +27,7 @@ angular.module('app.controllers', [])
                                 reader.onloadend = function () {
                                     $ionicLoading.hide();
                                     $scope.var.contenidoCsv = this.result;
+                                    $scope.csv2Objeto($scope.var.contenidoCsv);
                                 };
 
                                 reader.readAsText(file);
@@ -53,9 +55,27 @@ angular.module('app.controllers', [])
                     });
                     $ionicLoading.hide();
                 });
-                
+
                 $scope.getPersonas = function () {
                     return personaFactory.personas;
+                };
+
+                $scope.csv2Objeto = function (contenidoCsv) {
+                    let vecLineas = contenidoCsv.split('\n');
+                    //i=1 para evitar la cabecera
+                    for (let i = 1; i < vecLineas.length; i++) {
+                        let linea = vecLineas[i].split(';');
+                        personaFactory.personas.push({
+                            TRAMITE: linea[0],
+                            APELLIDO: linea[1],
+                            NOMBRE: linea[2],
+                            SEXO: linea[3],
+                            DNI: linea[4],
+                            EJEMPLAR: linea[5],
+                            FECHA_NACIM: linea[6],
+                            FECHA_EMISION_DNI: linea[7]
+                        });
+                    }
                 };
 
                 $scope.abrirEscaner = function () {
@@ -73,7 +93,6 @@ angular.module('app.controllers', [])
 
                                     if ($scope.var.textoLeido !== '') {
                                         let vecTextoLeido = $scope.var.textoLeido.split(";");
-                                        //'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI
                                         if (personaFactory.personas.length === 0) {
                                             personaFactory.personas.push({
                                                 TRAMITE: vecTextoLeido[0],
@@ -85,6 +104,7 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
+                                            $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
                                         } else {
                                             for (let i = 0; i < personaFactory.personas.length; i++) {
                                                 if (personaFactory.personas[i].DNI !== vecTextoLeido[4]) {
@@ -98,10 +118,11 @@ angular.module('app.controllers', [])
                                                         FECHA_NACIM: vecTextoLeido[6],
                                                         FECHA_EMISION_DNI: vecTextoLeido[7]
                                                     });
+                                                    $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                                 }
                                             }
                                         }
-                                        //$scope.guardarArchivo(false);
+                                        $scope.guardarArchivo(false);
 
                                         $ionicPopup.alert({
                                             title: 'Info',
@@ -171,7 +192,7 @@ angular.module('app.controllers', [])
                                 };
 
                                 // Se crea un blob y luego se guarda el archivo
-                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+                                //$scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                 let dataObj = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
                                 fileWriter.write(dataObj);
                             });
