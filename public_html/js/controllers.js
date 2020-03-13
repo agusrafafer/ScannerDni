@@ -105,9 +105,11 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
-                                            $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+                                            
                                             if($scope.var.contenidoCsv === ''){
                                                 $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
+                                            } else {
+                                               $scope.var.contenidoCsv += $scope.var.textoLeido + '\n'; 
                                             }
                                         } else {
                                             for (let i = 0; i < personaFactory.personas.length; i++) {
