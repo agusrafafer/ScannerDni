@@ -91,9 +91,9 @@ angular.module('app.controllers', [])
                                     $scope.var.textoLeido = result.text;
                                     $scope.var.formatoLeido = result.format;
                                     $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
-
+                                    let vecTextoLeido = $scope.var.textoLeido.split(";");
+                                    
                                     if ($scope.var.textoLeido !== '') {
-                                        let vecTextoLeido = $scope.var.textoLeido.split(";");
                                         if (personaFactory.personas.length === 0) {
                                             personaFactory.personas.push({
                                                 TRAMITE: vecTextoLeido[0],
@@ -105,11 +105,11 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
-                                            
-                                            if($scope.var.contenidoCsv === ''){
+
+                                            if ($scope.var.contenidoCsv === '') {
                                                 $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
                                             } else {
-                                               $scope.var.contenidoCsv += $scope.var.textoLeido + '\n'; 
+                                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
                                         } else {
                                             for (let i = 0; i < personaFactory.personas.length; i++) {
