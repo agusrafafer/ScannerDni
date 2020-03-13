@@ -1,9 +1,12 @@
 angular.module('app.services', [])
 
-.factory('BlankFactory', [function(){
+        .factory('personaFactory', [function () {
+                return {
+                    personaSel: '',
+                    personas: []
+                };
+            }])
 
-}])
+        .service('BlankService', [function () {
 
-.service('BlankService', [function(){
-
-}]);
+            }]);

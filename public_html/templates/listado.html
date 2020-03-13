@@ -1,7 +1,9 @@
 <ion-view title="Listado de DNI's" id="page2">
     <ion-content padding="true" class="has-header">
         <ion-list>            
-            <ion-item class="item-icon-right" ng-class="persona.SEXO === 'F'?'royal':'balanced'" ng-repeat="persona in var.vecPersonas">
+            <ion-item class="item-icon-right" 
+                      ng-repeat="persona in getPersonas()"
+                      ng-class="persona.SEXO === 'F'?'royal':'balanced'">
                 <h2>DNI: {{persona.DNI}}</h2>
                 <p>Apellido: {{persona.APELLIDO}}</p>
                 <p>Nombre: {{persona.NOMBRE}}</p>

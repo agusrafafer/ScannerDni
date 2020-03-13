@@ -1,15 +1,14 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory) {
 
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
                     contenidoCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n',
-                    pathCsv: '',
-                    vecPersonas: []
+                    pathCsv: ''
                 };
 
 
@@ -54,6 +53,10 @@ angular.module('app.controllers', [])
                     });
                     $ionicLoading.hide();
                 });
+                
+                $scope.getPersonas = function () {
+                    return personaFactory.personas;
+                };
 
                 $scope.abrirEscaner = function () {
                     $ionicLoading.show({
@@ -71,8 +74,8 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let vecTextoLeido = $scope.var.textoLeido.split(";");
                                         //'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI
-                                        if ($scope.var.vecPersonas.length === 0) {
-                                            $scope.var.vecPersonas.push({
+                                        if (personaFactory.personas.length === 0) {
+                                            personaFactory.personas.push({
                                                 TRAMITE: vecTextoLeido[0],
                                                 APELLIDO: vecTextoLeido[1],
                                                 NOMBRE: vecTextoLeido[2],
@@ -83,9 +86,9 @@ angular.module('app.controllers', [])
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
                                         } else {
-                                            for (var i = 0; i < $scope.var.vecPersonas.length; i++) {
-                                                if ($scope.var.vecPersonas[i] !== $scope.var.textoLeido) {
-                                                    $scope.var.vecPersonas.push({
+                                            for (var i = 0; i < personaFactory.personas.length; i++) {
+                                                if (personaFactory.personas[i] !== $scope.var.textoLeido) {
+                                                    personaFactory.personas.push({
                                                         TRAMITE: vecTextoLeido[0],
                                                         APELLIDO: vecTextoLeido[1],
                                                         NOMBRE: vecTextoLeido[2],
