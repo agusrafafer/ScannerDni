@@ -92,7 +92,7 @@ angular.module('app.controllers', [])
                                     $scope.var.formatoLeido = result.format;
                                     $scope.var.textoLeido = $scope.var.textoLeido.replace(/@/g, ';');
                                     let vecTextoLeido = $scope.var.textoLeido.split(";");
-                                    
+
                                     if ($scope.var.textoLeido !== '') {
                                         if (personaFactory.personas.length === 0) {
                                             personaFactory.personas.push({
@@ -112,20 +112,25 @@ angular.module('app.controllers', [])
                                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
                                         } else {
+                                            let existe = false;
                                             for (let i = 0; i < personaFactory.personas.length; i++) {
-                                                if (personaFactory.personas[i].DNI !== vecTextoLeido[4]) {
-                                                    personaFactory.personas.push({
-                                                        TRAMITE: vecTextoLeido[0],
-                                                        APELLIDO: vecTextoLeido[1],
-                                                        NOMBRE: vecTextoLeido[2],
-                                                        SEXO: vecTextoLeido[3],
-                                                        DNI: vecTextoLeido[4],
-                                                        EJEMPLAR: vecTextoLeido[5],
-                                                        FECHA_NACIM: vecTextoLeido[6],
-                                                        FECHA_EMISION_DNI: vecTextoLeido[7]
-                                                    });
-                                                    $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+                                                if (personaFactory.personas[i].DNI === vecTextoLeido[4]) {
+                                                    existe = true;
+                                                    break;
                                                 }
+                                            }
+                                            if (!existe) {
+                                                personaFactory.personas.push({
+                                                    TRAMITE: vecTextoLeido[0],
+                                                    APELLIDO: vecTextoLeido[1],
+                                                    NOMBRE: vecTextoLeido[2],
+                                                    SEXO: vecTextoLeido[3],
+                                                    DNI: vecTextoLeido[4],
+                                                    EJEMPLAR: vecTextoLeido[5],
+                                                    FECHA_NACIM: vecTextoLeido[6],
+                                                    FECHA_EMISION_DNI: vecTextoLeido[7]
+                                                });
+                                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
                                         }
                                         $scope.guardarArchivo(false);
