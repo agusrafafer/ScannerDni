@@ -87,7 +87,7 @@ angular.module('app.controllers', [])
                                             });
                                         } else {
                                             for (var i = 0; i < personaFactory.personas.length; i++) {
-                                                if (personaFactory.personas[i] !== $scope.var.textoLeido) {
+                                                if (personaFactory.personas[i].DNI !== vecTextoLeido[4]) {
                                                     personaFactory.personas.push({
                                                         TRAMITE: vecTextoLeido[0],
                                                         APELLIDO: vecTextoLeido[1],
