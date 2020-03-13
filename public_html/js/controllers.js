@@ -1,7 +1,7 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 
-    
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform',
+
             function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform) {
 
                 $scope.var = {
@@ -71,21 +71,33 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let vecTextoLeido = $scope.var.textoLeido.split(";");
                                         //'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI
-                                        for (var i = 0; i < $scope.var.vecPersonas.length; i++) {
-                                            if ($scope.var.vecPersonas[i] !== $scope.var.textoLeido) {
-                                                $scope.var.vecPersonas.push({
-                                                    TRAMITE: vecTextoLeido[0],
-                                                    APELLIDO: vecTextoLeido[1],
-                                                    NOMBRE: vecTextoLeido[2],
-                                                    SEXO: vecTextoLeido[3],
-                                                    DNI: vecTextoLeido[4],
-                                                    EJEMPLAR: vecTextoLeido[5], 
-                                                    FECHA_NACIM: vecTextoLeido[6],
-                                                    FECHA_EMISION_DNI: vecTextoLeido[7]
-                                                });
+                                        if ($scope.var.vecPersonas.length === 0) {
+                                            $scope.var.vecPersonas.push({
+                                                TRAMITE: vecTextoLeido[0],
+                                                APELLIDO: vecTextoLeido[1],
+                                                NOMBRE: vecTextoLeido[2],
+                                                SEXO: vecTextoLeido[3],
+                                                DNI: vecTextoLeido[4],
+                                                EJEMPLAR: vecTextoLeido[5],
+                                                FECHA_NACIM: vecTextoLeido[6],
+                                                FECHA_EMISION_DNI: vecTextoLeido[7]
+                                            });
+                                        } else {
+                                            for (var i = 0; i < $scope.var.vecPersonas.length; i++) {
+                                                if ($scope.var.vecPersonas[i] !== $scope.var.textoLeido) {
+                                                    $scope.var.vecPersonas.push({
+                                                        TRAMITE: vecTextoLeido[0],
+                                                        APELLIDO: vecTextoLeido[1],
+                                                        NOMBRE: vecTextoLeido[2],
+                                                        SEXO: vecTextoLeido[3],
+                                                        DNI: vecTextoLeido[4],
+                                                        EJEMPLAR: vecTextoLeido[5],
+                                                        FECHA_NACIM: vecTextoLeido[6],
+                                                        FECHA_EMISION_DNI: vecTextoLeido[7]
+                                                    });
+                                                }
                                             }
                                         }
-                                        
                                         //$scope.guardarArchivo(false);
 
                                         $ionicPopup.alert({
