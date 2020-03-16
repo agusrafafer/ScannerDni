@@ -69,6 +69,7 @@ angular.module('app.controllers', [])
 //                        return;
 //                    }
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
+                    alert($scope.var.contenidoCsv);
                     let vecPerAux = JSON.stringify(personaFactory.personas);
                     vecPerAux = JSON.parse(vecPerAux);
                     personaFactory.personas = [];
@@ -79,14 +80,14 @@ angular.module('app.controllers', [])
                         let linea = vecLineas[i].split(";");
                         linea = linea.trim();
                         if (linea !== '' && linea !== null) {
-                            let existe = false;
-                            for (let i = 0; i < vecPerAux.length; i++) {
-                                if (vecPerAux[i].DNI === linea[4]) {
-                                    existe = true;
-                                    break;
-                                }
-                            }
-                            if (!existe) {
+//                            let existe = false;
+//                            for (let i = 0; i < vecPerAux.length; i++) {
+//                                if (vecPerAux[i].DNI === linea[4]) {
+//                                    existe = true;
+//                                    break;
+//                                }
+//                            }
+//                            if (!existe) {
                                 personaFactory.personas.push({
                                     TRAMITE: linea[0],
                                     APELLIDO: linea[1],
@@ -97,7 +98,7 @@ angular.module('app.controllers', [])
                                     FECHA_NACIM: linea[6],
                                     FECHA_EMISION_DNI: linea[7]
                                 });
-                            }
+//                            }
                         }
                     }
                 };
