@@ -77,28 +77,27 @@ angular.module('app.controllers', [])
                     personaFactory.personas.splice(0, personaFactory.personas.length);
                     //i=1 para evitar la cabecera
                     for (let i = 1; i < vecLineas.length; i++) {
-                        let linea = vecLineas[i].split(";");
-                        linea = linea.trim();
-                        if (linea !== '' && linea !== null) {
-//                            let existe = false;
-//                            for (let i = 0; i < vecPerAux.length; i++) {
-//                                if (vecPerAux[i].DNI === linea[4]) {
-//                                    existe = true;
-//                                    break;
-//                                }
-//                            }
-//                            if (!existe) {
+                        let subVeclinea = vecLineas[i].trim().split(";");
+                        if (subVeclinea.length > 0) {
+                            let existe = false;
+                            for (let i = 0; i < vecPerAux.length; i++) {
+                                if (vecPerAux[i].DNI === subVeclinea[4]) {
+                                    existe = true;
+                                    break;
+                                }
+                            }
+                            if (!existe) {
                                 personaFactory.personas.push({
-                                    TRAMITE: linea[0],
-                                    APELLIDO: linea[1],
-                                    NOMBRE: linea[2],
-                                    SEXO: linea[3],
-                                    DNI: linea[4],
-                                    EJEMPLAR: linea[5],
-                                    FECHA_NACIM: linea[6],
-                                    FECHA_EMISION_DNI: linea[7]
+                                    TRAMITE: subVeclinea[0],
+                                    APELLIDO: subVeclinea[1],
+                                    NOMBRE: subVeclinea[2],
+                                    SEXO: subVeclinea[3],
+                                    DNI: subVeclinea[4],
+                                    EJEMPLAR: subVeclinea[5],
+                                    FECHA_NACIM: subVeclinea[6],
+                                    FECHA_EMISION_DNI: subVeclinea[7]
                                 });
-//                            }
+                            }
                         }
                     }
                 };
