@@ -65,9 +65,6 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.csv2Objeto = function () {
-//                    if(personaFactory.personas.length > 0) {
-//                        return;
-//                    }
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
                     alert($scope.var.contenidoCsv);
                     let vecPerAux = JSON.stringify(personaFactory.personas);
