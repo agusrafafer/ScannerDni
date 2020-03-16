@@ -75,7 +75,7 @@ angular.module('app.controllers', [])
                                 break;
                             }
                         }
-                        if (!existe && typeof (subVeclinea[4]) !== "Undefined") {
+                        if (!existe) {
                             personaFactory.personas.push({
                                 TRAMITE: subVeclinea[0],
                                 APELLIDO: subVeclinea[1],
