@@ -79,6 +79,15 @@ angular.module('app.controllers', [])
                     }
                 };
 
+                $scope.objeto2Csv = function (vecObjetos) {
+                    $scope.var.contenidoCsv = $scope.var.cabeceraCsv;
+                    for (let i = 0; i < vecObjetos.length; i++) {
+                        $scope.var.contenidoCsv += vecObjetos[0] + ";" + vecObjetos[1] + ";" + 
+                                vecObjetos[2] + ";" + vecObjetos[3] + ";" + vecObjetos[4] + ";" + 
+                                vecObjetos[5] + ";" + vecObjetos[6] + ";" + vecObjetos[7];
+                    }
+                };
+
                 $scope.abrirEscaner = function () {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
@@ -258,6 +267,13 @@ angular.module('app.controllers', [])
                         });
                     });
                 };
+
+                $scope.eliminarRegistro = function (idx) {
+                    personaFactory.personas.splice(idx, 1);
+                    $scope.objeto2Csv(personaFactory.personas);
+                    $scope.guardarArchivo(false);
+                };
+
             }])
 
         .controller('menuCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

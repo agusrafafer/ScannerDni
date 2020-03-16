@@ -1,12 +1,17 @@
 <ion-view title="Ingreso" id="page1">
-  <ion-content padding="true" style="background: url(img/Y1D1ggZyQHuBWdybC1km_Mujer-3.jpg) no-repeat center;background-size:cover;" class="has-header">
-    <button class="button button-dark button-block icon-left ion-qr-scanner" ng-click="abrirEscaner()">Escaner</button>
-    <div class="spacer" style="width: 300px; height: 5px;"></div>
-    <button class="button button-balanced button-block icon-left ion-android-list" ui-sref="menu.listado()">Listado</button>
-    <div class="spacer" style="width: 300px; height: 5px;"></div>
-    <button class="button button-light button-block icon-left ion-android-upload" ng-click="subirArchivo()">Subir archivo</button>
-    
-    <a id="lnkDescarga" style="visibility: hidden"></a>
-    
-  </ion-content>
+    <ion-nav-buttons side="right" class="has-header">
+        <button class="button button-positive icon icon ion-android-list">
+            <ion-icon name="notifications">
+                <ion-badge class="badge badge-assertive" style="left: -10px;">{{getPersonas().length}}</ion-badge>
+            </ion-icon>
+        </button>
+    </ion-nav-buttons>
+    <ion-content padding="true" style="background: url(img/Y1D1ggZyQHuBWdybC1km_Mujer-3.jpg) no-repeat center;background-size:cover;" class="has-header">
+        <button class="button button-dark button-block icon-left ion-qr-scanner" ng-click="abrirEscaner()">Escaner</button>
+        <div class="spacer" style="width: 300px; height: 5px;"></div>
+        <button class="button button-balanced button-block icon-left ion-android-list" ui-sref="menu.listado()">Listado</button>
+        <div class="spacer" style="width: 300px; height: 5px;"></div>
+        <button class="button button-light button-block icon-left ion-android-upload" ng-click="subirArchivo()">Subir archivo</button>
+
+    </ion-content>
 </ion-view>
