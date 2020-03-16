@@ -65,10 +65,12 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.csv2Objeto = function () {
-                    if(personaFactory.personas.length > 0) {
-                        return;
-                    }
+//                    if(personaFactory.personas.length > 0) {
+//                        return;
+//                    }
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
+                    let vecPerAux = JSON.stringify(personaFactory.personas);
+                    vecPerAux = JSON.parse(vecPerAux);
                     personaFactory.personas = [];
                     personaFactory.personas.length = 0;
                     personaFactory.personas.splice(0, personaFactory.personas.length);
@@ -77,16 +79,25 @@ angular.module('app.controllers', [])
                         let linea = vecLineas[i].split(";");
                         linea = linea.trim();
                         if (linea !== '' && linea !== null && typeof (linea) !== "Undefined") {
-                            personaFactory.personas.push({
-                                TRAMITE: linea[0],
-                                APELLIDO: linea[1],
-                                NOMBRE: linea[2],
-                                SEXO: linea[3],
-                                DNI: linea[4],
-                                EJEMPLAR: linea[5],
-                                FECHA_NACIM: linea[6],
-                                FECHA_EMISION_DNI: linea[7]
-                            });
+                            let existe = false;
+                            for (let i = 0; i < vecPerAux.length; i++) {
+                                if (vecPerAux[i].DNI === linea[4]) {
+                                    existe = true;
+                                    break;
+                                }
+                            }
+                            if (!existe) {
+                                personaFactory.personas.push({
+                                    TRAMITE: linea[0],
+                                    APELLIDO: linea[1],
+                                    NOMBRE: linea[2],
+                                    SEXO: linea[3],
+                                    DNI: linea[4],
+                                    EJEMPLAR: linea[5],
+                                    FECHA_NACIM: linea[6],
+                                    FECHA_EMISION_DNI: linea[7]
+                                });
+                            }
                         }
                     }
                 };
