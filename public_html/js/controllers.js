@@ -13,48 +13,48 @@ angular.module('app.controllers', [])
                 };
 
 
-                $ionicPlatform.ready(function () {
-                    $ionicLoading.show({
-                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
-                    });
-                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
-                            $scope.var.pathCsv = fileEntry.fullPath;
-
-                            fileEntry.file(function (file) {
-                                var reader = new FileReader();
-
-                                reader.onloadend = function () {
-                                    $ionicLoading.hide();
-                                    $scope.var.contenidoCsv = this.result;
-                                    $scope.csv2Objeto($scope.var.contenidoCsv);
-                                };
-
-                                reader.readAsText(file);
-
-                            }, function (errorReadFile) {
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Info',
-                                    template: errorReadFile.toString()
-                                });
-                            });
-                        }, function (errorCreateFile) {
-                            $ionicLoading.hide();
-                            $ionicPopup.alert({
-                                title: 'Info',
-                                template: errorCreateFile.toString()
-                            });
-                        });
-                    }, function (errorLoadFs) {
-                        $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Info',
-                            template: errorLoadFs.toString()
-                        });
-                    });
-                    $ionicLoading.hide();
-                });
+//                $ionicPlatform.ready(function () {
+//                    $ionicLoading.show({
+//                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
+//                    });
+//                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+//                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
+//                            $scope.var.pathCsv = fileEntry.fullPath;
+//
+//                            fileEntry.file(function (file) {
+//                                var reader = new FileReader();
+//
+//                                reader.onloadend = function () {
+//                                    $ionicLoading.hide();
+//                                    $scope.var.contenidoCsv = this.result;
+//                                    $scope.csv2Objeto($scope.var.contenidoCsv);
+//                                };
+//
+//                                reader.readAsText(file);
+//
+//                            }, function (errorReadFile) {
+//                                $ionicLoading.hide();
+//                                $ionicPopup.alert({
+//                                    title: 'Info',
+//                                    template: errorReadFile.toString()
+//                                });
+//                            });
+//                        }, function (errorCreateFile) {
+//                            $ionicLoading.hide();
+//                            $ionicPopup.alert({
+//                                title: 'Info',
+//                                template: errorCreateFile.toString()
+//                            });
+//                        });
+//                    }, function (errorLoadFs) {
+//                        $ionicLoading.hide();
+//                        $ionicPopup.alert({
+//                            title: 'Info',
+//                            template: errorLoadFs.toString()
+//                        });
+//                    });
+//                    $ionicLoading.hide();
+//                });
 
                 $scope.getPersonas = function () {
                     return personaFactory.personas;
