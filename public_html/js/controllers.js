@@ -66,7 +66,7 @@ angular.module('app.controllers', [])
 
                 $scope.csv2Objeto = function () {
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
-                    for (let i = 1; i < vecLineas.length; i++) {
+                    for (let i = 1; i < vecLineas.length-1; i++) {
                         let subVeclinea = vecLineas[i].split(";");
                         let existe = false;
                         for (let j = 0; j < personaFactory.personas.length; j++) {
