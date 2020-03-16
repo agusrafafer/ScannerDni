@@ -1,8 +1,8 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state) {
 
                 $scope.var = {
                     textoLeido: '',
@@ -58,6 +58,10 @@ angular.module('app.controllers', [])
 
                 $scope.getPersonas = function () {
                     return personaFactory.personas;
+                };
+                
+                $scope.gotoListado = function() {
+                    $state.go('menu.listado', {}, {location: "replace"});
                 };
 
                 $scope.csv2Objeto = function (contenidoCsv) {
