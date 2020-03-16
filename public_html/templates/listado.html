@@ -1,6 +1,6 @@
 <ion-view title="Listado de DNI's" id="page2">
     <ion-nav-buttons side="right" class="has-header">
-        <button class="button button-positive icon icon ion-android-list">
+        <button class="button button-positive icon icon ion-trash-a" ng-click="eliminarRegistro(-1)">
             <ion-icon name="notifications">
                 <ion-badge class="badge badge-assertive" style="left: -10px;">{{getPersonas().length}}</ion-badge>
             </ion-icon>

@@ -66,7 +66,7 @@ angular.module('app.controllers', [])
 
                 $scope.csv2Objeto = function () {
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
-                    for (let i = 1; i < vecLineas.length-1; i++) {
+                    for (let i = 1; i < vecLineas.length - 1; i++) {
                         let subVeclinea = vecLineas[i].split(";");
                         let existe = false;
                         for (let j = 0; j < personaFactory.personas.length; j++) {
@@ -114,7 +114,25 @@ angular.module('app.controllers', [])
                                     let vecTextoLeido = $scope.var.textoLeido.split(";");
 
                                     if ($scope.var.textoLeido !== '') {
-                                        if (personaFactory.personas.length === 0) {
+                                        personaFactory.personas.push({
+                                            TRAMITE: vecTextoLeido[0],
+                                            APELLIDO: vecTextoLeido[1],
+                                            NOMBRE: vecTextoLeido[2],
+                                            SEXO: vecTextoLeido[3],
+                                            DNI: vecTextoLeido[4],
+                                            EJEMPLAR: vecTextoLeido[5],
+                                            FECHA_NACIM: vecTextoLeido[6],
+                                            FECHA_EMISION_DNI: vecTextoLeido[7]
+                                        });
+
+                                        let existe = false;
+                                        for (let i = 0; i < personaFactory.personas.length; i++) {
+                                            if (personaFactory.personas[i].DNI === vecTextoLeido[4]) {
+                                                existe = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!existe) {
                                             personaFactory.personas.push({
                                                 TRAMITE: vecTextoLeido[0],
                                                 APELLIDO: vecTextoLeido[1],
@@ -125,34 +143,13 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
-
                                             if ($scope.var.contenidoCsv === '') {
                                                 $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
                                             } else {
                                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
-                                        } else {
-                                            let existe = false;
-                                            for (let i = 0; i < personaFactory.personas.length; i++) {
-                                                if (personaFactory.personas[i].DNI === vecTextoLeido[4]) {
-                                                    existe = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (!existe) {
-                                                personaFactory.personas.push({
-                                                    TRAMITE: vecTextoLeido[0],
-                                                    APELLIDO: vecTextoLeido[1],
-                                                    NOMBRE: vecTextoLeido[2],
-                                                    SEXO: vecTextoLeido[3],
-                                                    DNI: vecTextoLeido[4],
-                                                    EJEMPLAR: vecTextoLeido[5],
-                                                    FECHA_NACIM: vecTextoLeido[6],
-                                                    FECHA_EMISION_DNI: vecTextoLeido[7]
-                                                });
-                                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
-                                            }
                                         }
+
                                         $scope.guardarArchivo(false);
 
                                         $ionicPopup.alert({
@@ -280,8 +277,12 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.eliminarRegistro = function (idx) {
-                    personaFactory.personas.splice(idx, 1);
-                    $scope.objeto2Csv(personaFactory.personas);
+                    if (idx === -1) {
+                        personaFactory.personas = personaFactory.personas.splice(1, personaFactory.personas.lenght);
+                    } else {
+                        personaFactory.personas.splice(idx, 1);
+                    }
+                    $scope.objeto2Csv();
                     $scope.guardarArchivo(false);
                 };
 
