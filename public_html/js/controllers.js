@@ -68,8 +68,8 @@ angular.module('app.controllers', [])
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
                     for (let i = 1; i < vecLineas.length; i++) {
                         let subVeclinea = vecLineas[i].split(";");
+                        let existe = false;
                         for (let j = 0; j < personaFactory.personas.length; j++) {
-                            let existe = false;
                             if (personaFactory.personas[j].DNI === "" || personaFactory.personas[j].DNI === subVeclinea[4]) {
                                 existe = true;
                                 break;
