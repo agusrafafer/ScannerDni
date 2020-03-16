@@ -114,17 +114,6 @@ angular.module('app.controllers', [])
                                     let vecTextoLeido = $scope.var.textoLeido.split(";");
 
                                     if ($scope.var.textoLeido !== '') {
-                                        personaFactory.personas.push({
-                                            TRAMITE: vecTextoLeido[0],
-                                            APELLIDO: vecTextoLeido[1],
-                                            NOMBRE: vecTextoLeido[2],
-                                            SEXO: vecTextoLeido[3],
-                                            DNI: vecTextoLeido[4],
-                                            EJEMPLAR: vecTextoLeido[5],
-                                            FECHA_NACIM: vecTextoLeido[6],
-                                            FECHA_EMISION_DNI: vecTextoLeido[7]
-                                        });
-
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
                                             if (personaFactory.personas[i].DNI === vecTextoLeido[4]) {
