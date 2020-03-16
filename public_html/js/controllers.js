@@ -67,6 +67,8 @@ angular.module('app.controllers', [])
                 $scope.csv2Objeto = function (contenidoCsv) {
                     let vecLineas = contenidoCsv.split("\n");
                     personaFactory.personas = [];
+                    personaFactory.personas.length = 0;
+                    personaFactory.personas.splice(0, personaFactory.personas.length);
                     //i=1 para evitar la cabecera
                     for (let i = 1; i < vecLineas.length; i++) {
                         let linea = vecLineas[i].split(";");
