@@ -78,7 +78,7 @@ angular.module('app.controllers', [])
                     for (let i = 1; i < vecLineas.length; i++) {
                         let linea = vecLineas[i].split(";");
                         linea = linea.trim();
-                        if (linea !== '' && linea !== null && typeof (linea) !== "Undefined") {
+                        if (linea !== '' && linea !== null) {
                             let existe = false;
                             for (let i = 0; i < vecPerAux.length; i++) {
                                 if (vecPerAux[i].DNI === linea[4]) {
