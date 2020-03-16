@@ -66,35 +66,26 @@ angular.module('app.controllers', [])
 
                 $scope.csv2Objeto = function () {
                     let vecLineas = $scope.var.contenidoCsv.split("\n");
-                    alert($scope.var.contenidoCsv);
-                    let vecPerAux = JSON.stringify(personaFactory.personas);
-                    vecPerAux = JSON.parse(vecPerAux);
-                    personaFactory.personas = [];
-                    personaFactory.personas.length = 0;
-                    personaFactory.personas.splice(0, personaFactory.personas.length);
-                    //i=1 para evitar la cabecera
                     for (let i = 1; i < vecLineas.length; i++) {
-                        let subVeclinea = vecLineas[i].trim().split(";");
-                        if (subVeclinea.length > 0) {
+                        let subVeclinea = vecLineas[i].split(";");
+                        for (let j = 0; j < personaFactory.personas.length; j++) {
                             let existe = false;
-                            for (let j = 0; j < vecPerAux.length; j++) {
-                                if (vecPerAux[j].DNI === "" || vecPerAux[j].DNI === subVeclinea[4]) {
-                                    existe = true;
-                                    break;
-                                }
+                            if (personaFactory.personas[j].DNI === "" || personaFactory.personas[j].DNI === subVeclinea[4]) {
+                                existe = true;
+                                break;
                             }
-                            if (!existe) {
-                                personaFactory.personas.push({
-                                    TRAMITE: subVeclinea[0],
-                                    APELLIDO: subVeclinea[1],
-                                    NOMBRE: subVeclinea[2],
-                                    SEXO: subVeclinea[3],
-                                    DNI: subVeclinea[4],
-                                    EJEMPLAR: subVeclinea[5],
-                                    FECHA_NACIM: subVeclinea[6],
-                                    FECHA_EMISION_DNI: subVeclinea[7]
-                                });
-                            }
+                        }
+                        if (!existe) {
+                            personaFactory.personas.push({
+                                TRAMITE: subVeclinea[0],
+                                APELLIDO: subVeclinea[1],
+                                NOMBRE: subVeclinea[2],
+                                SEXO: subVeclinea[3],
+                                DNI: subVeclinea[4],
+                                EJEMPLAR: subVeclinea[5],
+                                FECHA_NACIM: subVeclinea[6],
+                                FECHA_EMISION_DNI: subVeclinea[7]
+                            });
                         }
                     }
                 };
