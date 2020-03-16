@@ -80,8 +80,8 @@ angular.module('app.controllers', [])
                         let subVeclinea = vecLineas[i].trim().split(";");
                         if (subVeclinea.length > 0) {
                             let existe = false;
-                            for (let i = 0; i < vecPerAux.length; i++) {
-                                if (vecPerAux[i].DNI === subVeclinea[4]) {
+                            for (let j = 0; j < vecPerAux.length; j++) {
+                                if (vecPerAux[j].DNI === subVeclinea[4]) {
                                     existe = true;
                                     break;
                                 }
