@@ -13,84 +13,90 @@ angular.module('app.controllers', [])
                 };
 
 
-//                $ionicPlatform.ready(function () {
-//                    $ionicLoading.show({
-//                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
-//                    });
-//                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-//                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
-//                            $scope.var.pathCsv = fileEntry.fullPath;
-//
-//                            fileEntry.file(function (file) {
-//                                var reader = new FileReader();
-//
-//                                reader.onloadend = function () {
-//                                    $ionicLoading.hide();
-//                                    $scope.var.contenidoCsv = this.result;
-//                                    $scope.csv2Objeto($scope.var.contenidoCsv);
-//                                };
-//
-//                                reader.readAsText(file);
-//
-//                            }, function (errorReadFile) {
-//                                $ionicLoading.hide();
-//                                $ionicPopup.alert({
-//                                    title: 'Info',
-//                                    template: errorReadFile.toString()
-//                                });
-//                            });
-//                        }, function (errorCreateFile) {
-//                            $ionicLoading.hide();
-//                            $ionicPopup.alert({
-//                                title: 'Info',
-//                                template: errorCreateFile.toString()
-//                            });
-//                        });
-//                    }, function (errorLoadFs) {
-//                        $ionicLoading.hide();
-//                        $ionicPopup.alert({
-//                            title: 'Info',
-//                            template: errorLoadFs.toString()
-//                        });
-//                    });
-//                    $ionicLoading.hide();
-//                });
+                $ionicPlatform.ready(function () {
+                    $ionicLoading.show({
+                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
+                    });
+                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
+                            $scope.var.pathCsv = fileEntry.fullPath;
+
+                            fileEntry.file(function (file) {
+                                var reader = new FileReader();
+
+                                reader.onloadend = function () {
+                                    $ionicLoading.hide();
+                                    $scope.var.contenidoCsv = this.result;
+                                    $scope.csv2Objeto();
+                                };
+
+                                reader.readAsText(file);
+
+                            }, function (errorReadFile) {
+                                $ionicLoading.hide();
+                                $ionicPopup.alert({
+                                    title: 'Info',
+                                    template: errorReadFile.toString()
+                                });
+                            });
+                        }, function (errorCreateFile) {
+                            $ionicLoading.hide();
+                            $ionicPopup.alert({
+                                title: 'Info',
+                                template: errorCreateFile.toString()
+                            });
+                        });
+                    }, function (errorLoadFs) {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'Info',
+                            template: errorLoadFs.toString()
+                        });
+                    });
+                    $ionicLoading.hide();
+                });
 
                 $scope.getPersonas = function () {
                     return personaFactory.personas;
                 };
-                
-                $scope.gotoListado = function() {
+
+                $scope.gotoListado = function () {
                     $state.go('menu.listado', {}, {location: "replace"});
                 };
 
-                $scope.csv2Objeto = function (contenidoCsv) {
-                    let vecLineas = contenidoCsv.split("\n");
+                $scope.csv2Objeto = function () {
+                    if(personaFactory.personas.length > 0) {
+                        return;
+                    }
+                    let vecLineas = $scope.var.contenidoCsv.split("\n");
                     personaFactory.personas = [];
                     personaFactory.personas.length = 0;
                     personaFactory.personas.splice(0, personaFactory.personas.length);
                     //i=1 para evitar la cabecera
                     for (let i = 1; i < vecLineas.length; i++) {
                         let linea = vecLineas[i].split(";");
-                        personaFactory.personas.push({
-                            TRAMITE: linea[0],
-                            APELLIDO: linea[1],
-                            NOMBRE: linea[2],
-                            SEXO: linea[3],
-                            DNI: linea[4],
-                            EJEMPLAR: linea[5],
-                            FECHA_NACIM: linea[6],
-                            FECHA_EMISION_DNI: linea[7]
-                        });
+                        linea = linea.trim();
+                        if (linea !== '' && linea !== null && typeof (linea) !== "Undefined") {
+                            personaFactory.personas.push({
+                                TRAMITE: linea[0],
+                                APELLIDO: linea[1],
+                                NOMBRE: linea[2],
+                                SEXO: linea[3],
+                                DNI: linea[4],
+                                EJEMPLAR: linea[5],
+                                FECHA_NACIM: linea[6],
+                                FECHA_EMISION_DNI: linea[7]
+                            });
+                        }
                     }
                 };
 
-                $scope.objeto2Csv = function (vecObjetos) {
+                $scope.objeto2Csv = function () {
                     $scope.var.contenidoCsv = $scope.var.cabeceraCsv;
-                    for (let i = 0; i < vecObjetos.length; i++) {
-                        $scope.var.contenidoCsv += vecObjetos[0] + ";" + vecObjetos[1] + ";" + 
-                                vecObjetos[2] + ";" + vecObjetos[3] + ";" + vecObjetos[4] + ";" + 
-                                vecObjetos[5] + ";" + vecObjetos[6] + ";" + vecObjetos[7];
+                    for (let i = 0; i < personaFactory.personas.length; i++) {
+                        $scope.var.contenidoCsv += personaFactory.personas[0] + ";" + personaFactory.personas[1] + ";" +
+                                personaFactory.personas[2] + ";" + personaFactory.personas[3] + ";" + personaFactory.personas[4] + ";" +
+                                personaFactory.personas[5] + ";" + personaFactory.personas[6] + ";" + personaFactory.personas[7];
                     }
                 };
 
