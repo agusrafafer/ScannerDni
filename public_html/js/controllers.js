@@ -1,8 +1,8 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory', '$webSql',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory, $webSql) {
 
                 $scope.var = {
                     textoLeido: '',
@@ -12,51 +12,75 @@ angular.module('app.controllers', [])
                     pathCsv: ''
                 };
 
+                $scope.db = $webSql.openDatabase('listadoDnis', '1.0', 'Lista de DNI', 2 * 1024 * 1024);
+
                 $ionicPlatform.ready(function () {
                     sesionFactory.contador = sesionFactory.contador + 1;
                     if ($state.current.name === 'menu.ingreso' && sesionFactory.contador === 1) {
                         $ionicLoading.show({
                             template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                         });
-                        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                            fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
-                                $scope.var.pathCsv = fileEntry.fullPath;
 
-                                fileEntry.file(function (file) {
-                                    var reader = new FileReader();
-
-                                    reader.onloadend = function () {
-                                        $ionicLoading.hide();
-                                        //alert(this.result);
-                                        //alert(personaFactory.personas.length);
-                                        $scope.var.contenidoCsv = this.result;
-                                        $scope.csv2Objeto();
-                                        //alert(personaFactory.personas.length);
-                                    };
-
-                                    reader.readAsText(file);
-
-                                }, function (errorReadFile) {
-                                    $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Info',
-                                        template: errorReadFile.toString()
+                        $scope.db.selectAll("persona").then(function (results) {
+                            if (results.rows.length > 0) {
+                                for (let i = 0; i < results.rows.length; i++) {
+                                    personaFactory.personas.push({
+                                        TRAMITE: results.rows.item(i).TRAMITE,
+                                        APELLIDO: results.rows.item(i).APELLIDO,
+                                        NOMBRE: results.rows.item(i).NOMBRE,
+                                        SEXO: results.rows.item(i).SEXO,
+                                        DNI: results.rows.item(i).DNI,
+                                        EJEMPLAR: results.rows.item(i).EJEMPLAR,
+                                        FECHA_NACIM: results.rows.item(i).FECHA_NACIM,
+                                        FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI
                                     });
-                                });
-                            }, function (errorCreateFile) {
+                                }
                                 $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Info',
-                                    template: errorCreateFile.toString()
-                                });
-                            });
-                        }, function (errorLoadFs) {
-                            $ionicLoading.hide();
-                            $ionicPopup.alert({
-                                title: 'Info',
-                                template: errorLoadFs.toString()
-                            });
+                            } else {
+                                $ionicLoading.hide();
+                            }
                         });
+
+
+//                        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+//                            fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
+//                                $scope.var.pathCsv = fileEntry.fullPath;
+//
+//                                fileEntry.file(function (file) {
+//                                    var reader = new FileReader();
+//
+//                                    reader.onloadend = function () {
+//                                        $ionicLoading.hide();
+//                                        //alert(this.result);
+//                                        //alert(personaFactory.personas.length);
+//                                        $scope.var.contenidoCsv = this.result;
+//                                        $scope.csv2Objeto();
+//                                        //alert(personaFactory.personas.length);
+//                                    };
+//
+//                                    reader.readAsText(file);
+//
+//                                }, function (errorReadFile) {
+//                                    $ionicLoading.hide();
+//                                    $ionicPopup.alert({
+//                                        title: 'Info',
+//                                        template: errorReadFile.toString()
+//                                    });
+//                                });
+//                            }, function (errorCreateFile) {
+//                                $ionicLoading.hide();
+//                                $ionicPopup.alert({
+//                                    title: 'Info',
+//                                    template: errorCreateFile.toString()
+//                                });
+//                            });
+//                        }, function (errorLoadFs) {
+//                            $ionicLoading.hide();
+//                            $ionicPopup.alert({
+//                                title: 'Info',
+//                                template: errorLoadFs.toString()
+//                            });
+//                        });
                         $ionicLoading.hide();
                     }
                 });
@@ -138,13 +162,25 @@ angular.module('app.controllers', [])
                                                 FECHA_NACIM: vecTextoLeido[6],
                                                 FECHA_EMISION_DNI: vecTextoLeido[7]
                                             });
-                                            if ($scope.var.contenidoCsv === '') {
-                                                $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
-                                            } else {
-                                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
-                                            }
-                                            //$scope.eliminarArchivo();
-                                            $scope.guardarArchivo(false);
+
+                                            $scope.db.insert('persona',
+                                                    {"TRAMITE": vecTextoLeido[0], "APELLIDO": vecTextoLeido[1],
+                                                        "NOMBRE": vecTextoLeido[2], "SEXO": vecTextoLeido[3],
+                                                        "DNI": vecTextoLeido[4], "EJEMPLAR": vecTextoLeido[5],
+                                                        "FECHA_NACIM": vecTextoLeido[6], "FECHA_EMISION_DNI": vecTextoLeido[7]
+                                                    }
+                                            ).then(function (results) {
+
+                                            });
+
+
+//                                            if ($scope.var.contenidoCsv === '') {
+//                                                $scope.var.contenidoCsv = $scope.var.cabeceraCsv + $scope.var.textoLeido + '\n';
+//                                            } else {
+//                                                $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
+//                                            }
+//                                            //$scope.eliminarArchivo();
+//                                            $scope.guardarArchivo(false);
                                         }
                                         $ionicPopup.alert({
                                             title: 'Info',
@@ -236,50 +272,6 @@ angular.module('app.controllers', [])
                     $ionicLoading.hide();
                 };
 
-                $scope.eliminarArchivo = function () {
-                    $ionicLoading.show({
-                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
-                    });
-
-                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
-                            fileEntry.remove(function () {
-                                // Archivo removido con exito
-                                $ionicLoading.hide();
-                            }, function (error) {
-                                // Error deleting the file
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Info',
-                                    template: 'Error borrando el archivo'
-                                });
-                            }, function () {
-                                // The file doesn't exist
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Info',
-                                    template: 'Error el archivo no existe'
-                                });
-                            });
-
-                        }, function (errorCreateFile) {
-                            $ionicLoading.hide();
-                            $ionicPopup.alert({
-                                title: 'Info',
-                                template: 'Error creando el archivo'
-                            });
-                        });
-                    }, function (errorLoadFs) {
-                        $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Info',
-                            template: 'Error cargando el archivo'
-                        });
-                    });
-                    $ionicLoading.hide();
-                };
-
-
                 $scope.subirArchivo = function () {
                     cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
                         //alert("ftp: conexion ok=" + ok);
@@ -313,20 +305,24 @@ angular.module('app.controllers', [])
                     });
                 };
 
-                $scope.eliminarRegistro = function (idx) {
+                $scope.eliminarRegistro = function (idx, dni) {
                     if (idx === -1) {
+                        let i = personaFactory.personas.length;
                         while (personaFactory.personas.length > 0) {
+                            i--;
+                            $scope.db.del("persona", {"DNI": personaFactory.personas[i].DNI});
                             personaFactory.personas.pop();
                         }
                         //personaFactory.personas = personaFactory.personas.splice(1, personaFactory.personas.lenght);
                         //personaFactory.personas.lenght = 0;
                         //personaFactory.personas = [];
                     } else {
+                        $scope.db.del("persona", {"DNI": dni});
                         personaFactory.personas.splice(idx, 1);
                     }
-                    $scope.objeto2Csv();
+                    //$scope.objeto2Csv();
                     //$scope.eliminarArchivo();
-                    $scope.guardarArchivo(false);
+                    //$scope.guardarArchivo(false);
                 };
 
             }])

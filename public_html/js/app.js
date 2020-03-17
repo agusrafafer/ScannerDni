@@ -5,79 +5,121 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services',])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives', 'app.services', 'angular-websql', 'ngCordova'])
 
-.config(function($ionicConfigProvider, $sceDelegateProvider){
+        .config(function ($ionicConfigProvider, $sceDelegateProvider) {
 
-  $sceDelegateProvider.resourceUrlWhitelist([ 'self','*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
+            $sceDelegateProvider.resourceUrlWhitelist(['self', '*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
 
-})
+        })
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
+        .run(function ($ionicPlatform, $webSql) {
+            $ionicPlatform.ready(function () {
+                let db = $webSql.openDatabase('listadoDnis', '1.0', 'Lista de DNI', 2 * 1024 * 1024);
+                //TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI
+                db.createTable('persona', {
+                    "id": {
+                        "type": "INTEGER",
+                        "null": "NOT NULL", // default is "NULL" (if not defined)
+                        "primary": true, // primary
+                        "auto_increment": true // auto increment
+                    },
+                    "TRAMITE": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "APELLIDO": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "NOMBRE": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "SEXO": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "DNI": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "EJEMPLAR": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "FECHA_NACIM": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "FECHA_EMISION_DNI": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    }
+                });
+                // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+                // for form inputs)
+                if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                    cordova.plugins.Keyboard.disableScroll(true);
+                }
+                if (window.StatusBar) {
+                    // org.apache.cordova.statusbar required
+                    StatusBar.styleDefault();
+                }
+            });
+        })
 
-/*
-  This directive is used to disable the "drag to open" functionality of the Side-Menu
-  when you are dragging a Slider component.
-*/
-.directive('disableSideMenuDrag', ['$ionicSideMenuDelegate', '$rootScope', function($ionicSideMenuDelegate, $rootScope) {
-    return {
-        restrict: "A",  
-        controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
+        /*
+         This directive is used to disable the "drag to open" functionality of the Side-Menu
+         when you are dragging a Slider component.
+         */
+        .directive('disableSideMenuDrag', ['$ionicSideMenuDelegate', '$rootScope', function ($ionicSideMenuDelegate, $rootScope) {
+                return {
+                    restrict: "A",
+                    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
 
-            function stopDrag(){
-              $ionicSideMenuDelegate.canDragContent(false);
-            }
+                            function stopDrag() {
+                                $ionicSideMenuDelegate.canDragContent(false);
+                            }
 
-            function allowDrag(){
-              $ionicSideMenuDelegate.canDragContent(true);
-            }
+                            function allowDrag() {
+                                $ionicSideMenuDelegate.canDragContent(true);
+                            }
 
-            $rootScope.$on('$ionicSlides.slideChangeEnd', allowDrag);
-            $element.on('touchstart', stopDrag);
-            $element.on('touchend', allowDrag);
-            $element.on('mousedown', stopDrag);
-            $element.on('mouseup', allowDrag);
+                            $rootScope.$on('$ionicSlides.slideChangeEnd', allowDrag);
+                            $element.on('touchstart', stopDrag);
+                            $element.on('touchend', allowDrag);
+                            $element.on('mousedown', stopDrag);
+                            $element.on('mouseup', allowDrag);
 
-        }]
-    };
-}])
+                        }]
+                };
+            }])
 
-/*
-  This directive is used to open regular and dynamic href links inside of inappbrowser.
-*/
-.directive('hrefInappbrowser', function() {
-  return {
-    restrict: 'A',
-    replace: false,
-    transclude: false,
-    link: function(scope, element, attrs) {
-      var href = attrs['hrefInappbrowser'];
+        /*
+         This directive is used to open regular and dynamic href links inside of inappbrowser.
+         */
+        .directive('hrefInappbrowser', function () {
+            return {
+                restrict: 'A',
+                replace: false,
+                transclude: false,
+                link: function (scope, element, attrs) {
+                    var href = attrs['hrefInappbrowser'];
 
-      attrs.$observe('hrefInappbrowser', function(val){
-        href = val;
-      });
-      
-      element.bind('click', function (event) {
+                    attrs.$observe('hrefInappbrowser', function (val) {
+                        href = val;
+                    });
 
-        window.open(href, '_system', 'location=yes');
+                    element.bind('click', function (event) {
 
-        event.preventDefault();
-        event.stopPropagation();
+                        window.open(href, '_system', 'location=yes');
 
-      });
-    }
-  };
-});
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                    });
+                }
+            };
+        });
