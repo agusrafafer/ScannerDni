@@ -161,7 +161,7 @@ angular.module('app.controllers', [])
                                     showFlipCameraButton: true, // iOS y Android
                                     showTorchButton: true, // iOS y Android
                                     torchOn: true, // Android, launch with the torch switched on (if available)
-                                    saveHistory: true, // Android, save scan history (default false)
+                                    saveHistory: false, // Android, save scan history (default false)
                                     prompt: "Por favor acerque el DNI a la camara para realizar el escaneo", // Android
                                     resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
                                     formats: "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
