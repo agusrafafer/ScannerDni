@@ -6,6 +6,12 @@ angular.module('app.services', [])
                     personas: []
                 };
             }])
+        
+        .factory('sesionFactory', [function () {
+                return {
+                    contador: 0
+                };
+            }])
 
         .service('BlankService', [function () {
 

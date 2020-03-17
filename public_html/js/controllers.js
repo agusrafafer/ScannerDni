@@ -1,8 +1,8 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory) {
 
                 $scope.var = {
                     textoLeido: '',
@@ -13,7 +13,8 @@ angular.module('app.controllers', [])
                 };
 
                 $ionicPlatform.ready(function () {
-                    if ($state.current.name === 'menu.ingreso') {
+                    sesionFactory.contador = sesionFactory.contador + 1;
+                    if ($state.current.name === 'menu.ingreso' && sesionFactory.contador === 1) {
                         $ionicLoading.show({
                             template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                         });
