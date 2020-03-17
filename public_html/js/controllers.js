@@ -7,7 +7,7 @@ angular.module('app.controllers', [])
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA NACIM;FECHA EMISION DNI\n',
+                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI\n',
                     contenidoCsv: '',
                     pathCsv: ''
                 };
@@ -91,12 +91,13 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.objeto2Csv = function () {
-                    $scope.var.contenidoCsv = $scope.var.cabeceraCsv;
+                    let contenido = "";
                     for (let i = 0; i < personaFactory.personas.length; i++) {
-                        $scope.var.contenidoCsv += personaFactory.personas[0].TRAMITE + ";" + personaFactory.personas[1].APELLIDO + ";" +
+                        contenido += personaFactory.personas[0].TRAMITE + ";" + personaFactory.personas[1].APELLIDO + ";" +
                                 personaFactory.personas[2].NOMBRE + ";" + personaFactory.personas[3].SEXO + ";" + personaFactory.personas[4].DNI + ";" +
-                                personaFactory.personas[5].EJEMPLAR + ";" + personaFactory.personas[6].FECHA_NACIM + ";" + personaFactory.personas[7].FECHA_EMISION_DNI;
+                                personaFactory.personas[5].EJEMPLAR + ";" + personaFactory.personas[6].FECHA_NACIM + ";" + personaFactory.personas[7].FECHA_EMISION_DNI + "\n";
                     }
+                    $scope.var.contenidoCsv = $scope.var.cabeceraCsv + contenido;
                 };
 
                 $scope.abrirEscaner = function () {
