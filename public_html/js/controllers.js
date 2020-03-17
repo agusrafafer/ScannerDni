@@ -137,10 +137,8 @@ angular.module('app.controllers', [])
                                             } else {
                                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
+                                            $scope.guardarArchivo(false);
                                         }
-
-                                        $scope.guardarArchivo(false);
-
                                         $ionicPopup.alert({
                                             title: 'Info',
                                             template: 'Escaneo exitoso: <br/>' +
