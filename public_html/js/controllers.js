@@ -9,7 +9,8 @@ angular.module('app.controllers', [])
                     formatoLeido: '',
                     cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI\n',
                     contenidoCsv: '',
-                    pathCsv: ''
+                    pathCsv: '',
+                    urlRemota: 'https://www.agurait.com/escaner/visorListado.html'
                 };
 
                 $scope.db = $webSql.openDatabase('listadoDnis', '1.0', 'Lista de DNI', 2 * 1024 * 1024);
@@ -208,10 +209,9 @@ angular.module('app.controllers', [])
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Info',
-                                    template: 'Datos subidos con exito a <br/>' + 
-                                                'https://www.agurait.com/escaner/visorListado.html'
+                                    template: 'Datos subidos con exito a: <br/>' + $scope.var.urlRemota
                                 });
-                                
+
                                 var confirmPopup = $ionicPopup.confirm({
                                     title: 'Info',
                                     template: '¿Desea abrir el archivo remoto?',
@@ -221,15 +221,8 @@ angular.module('app.controllers', [])
 
                                 confirmPopup.then(function (res) {
                                     if (res) {
-                                        $window.open("https://www.agurait.com/escaner/visorListado.html", "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                                        $window.open($scope.var.urlRemota, "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
                                     }
-                                });
-
-
-
-                                $ionicPopup.alert({
-                                    title: 'Info',
-                                    template: 'Datos subidos con exito'
                                 });
                             }
                         }, function (error) {
@@ -246,6 +239,21 @@ angular.module('app.controllers', [])
                             title: 'Info',
                             template: "ftp: error en la conexion=" + error
                         });
+                    });
+                };
+
+                $scope.abrirUrlRemota = function () {
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: 'Info',
+                        template: '¿Desea abrir el archivo remoto? <br />' + $scope.var.urlRemota,
+                        okText: 'Si',
+                        cancelText: 'No'
+                    });
+
+                    confirmPopup.then(function (res) {
+                        if (res) {
+                            $window.open($scope.var.urlRemota, "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                        }
                     });
                 };
 
