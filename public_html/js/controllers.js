@@ -265,7 +265,12 @@ angular.module('app.controllers', [])
 
                 $scope.eliminarRegistro = function (idx) {
                     if (idx === -1) {
-                        personaFactory.personas = personaFactory.personas.splice(1, personaFactory.personas.lenght);
+                        while (personaFactory.personas.length > 0) {
+                            personaFactory.personas.pop();
+                        }
+                        //personaFactory.personas = personaFactory.personas.splice(1, personaFactory.personas.lenght);
+                        //personaFactory.personas.lenght = 0;
+                        //personaFactory.personas = [];
                     } else {
                         personaFactory.personas.splice(idx, 1);
                     }
