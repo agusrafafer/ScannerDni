@@ -134,10 +134,18 @@ angular.module('app.controllers', [])
 
 
                 $scope.guardarArchivo = function () {
+                    if (personaFactory.personas.length <= 0) {
+                        $ionicPopup.alert({
+                            title: 'Info',
+                            template: 'No hay datos para subir'
+                        });
+                        return;
+                    }
+
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
-                    
+
                     let contenido = "";
                     for (let i = 0; i < personaFactory.personas.length; i++) {
                         contenido += personaFactory.personas[i].TRAMITE + ";" + personaFactory.personas[i].APELLIDO + ";" +
@@ -145,8 +153,8 @@ angular.module('app.controllers', [])
                                 personaFactory.personas[i].EJEMPLAR + ";" + personaFactory.personas[i].FECHA_NACIM + ";" + personaFactory.personas[i].FECHA_EMISION_DNI + "\n";
                     }
                     $scope.var.contenidoCsv = $scope.var.cabeceraCsv + contenido;
-                    
-                    
+
+
                     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
                         fs.root.getFile("Download/listado.csv", {create: true, exclusive: false}, function (fileEntry) {
                             // fileEntry.name == 'someFile.txt'
@@ -200,9 +208,30 @@ angular.module('app.controllers', [])
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Info',
+                                    template: 'Datos subidos con exito a <br/>' + 
+                                                'https://www.agurait.com/escaner/visorListado.html'
+                                });
+                                
+                                var confirmPopup = $ionicPopup.confirm({
+                                    title: 'Info',
+                                    template: '¿Desea abrir el archivo remoto?',
+                                    okText: 'Si',
+                                    cancelText: 'No'
+                                });
+
+                                confirmPopup.then(function (res) {
+                                    if (res) {
+                                        $window.open("https://www.agurait.com/escaner/visorListado.html", "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                                    }
+                                });
+
+
+
+                                $ionicPopup.alert({
+                                    title: 'Info',
                                     template: 'Datos subidos con exito'
                                 });
-                            } 
+                            }
                         }, function (error) {
                             $ionicLoading.hide();
                             $ionicPopup.alert({
