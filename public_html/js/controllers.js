@@ -25,8 +25,11 @@ angular.module('app.controllers', [])
 
                                 reader.onloadend = function () {
                                     $ionicLoading.hide();
+                                    alert(this.result);
+                                    alert(personaFactory.personas.length);
                                     $scope.var.contenidoCsv = this.result;
                                     $scope.csv2Objeto();
+                                    alert(personaFactory.personas.length);
                                 };
 
                                 reader.readAsText(file);
