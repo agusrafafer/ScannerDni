@@ -12,8 +12,7 @@ angular.module('app.controllers', [])
                     pathCsv: ''
                 };
 
-
-                $ionicPlatform.ready(function () {
+                $scope.$on('$ionicView.afterEnter', function (event) {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
@@ -93,9 +92,9 @@ angular.module('app.controllers', [])
                 $scope.objeto2Csv = function () {
                     let contenido = "";
                     for (let i = 0; i < personaFactory.personas.length; i++) {
-                        contenido += personaFactory.personas[0].TRAMITE + ";" + personaFactory.personas[1].APELLIDO + ";" +
-                                personaFactory.personas[2].NOMBRE + ";" + personaFactory.personas[3].SEXO + ";" + personaFactory.personas[4].DNI + ";" +
-                                personaFactory.personas[5].EJEMPLAR + ";" + personaFactory.personas[6].FECHA_NACIM + ";" + personaFactory.personas[7].FECHA_EMISION_DNI + "\n";
+                        contenido += personaFactory.personas[i].TRAMITE + ";" + personaFactory.personas[i].APELLIDO + ";" +
+                                personaFactory.personas[i].NOMBRE + ";" + personaFactory.personas[i].SEXO + ";" + personaFactory.personas[i].DNI + ";" +
+                                personaFactory.personas[i].EJEMPLAR + ";" + personaFactory.personas[i].FECHA_NACIM + ";" + personaFactory.personas[i].FECHA_EMISION_DNI + "\n";
                     }
                     $scope.var.contenidoCsv = $scope.var.cabeceraCsv + contenido;
                 };
