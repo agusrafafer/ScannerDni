@@ -12,7 +12,7 @@ angular.module('app.controllers', [])
                     pathCsv: ''
                 };
 
-                $scope.$on('$ionicView.afterEnter', function (event) {
+                $ionicPlatform.ready(function () {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
