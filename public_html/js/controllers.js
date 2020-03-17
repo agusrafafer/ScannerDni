@@ -25,11 +25,11 @@ angular.module('app.controllers', [])
 
                                 reader.onloadend = function () {
                                     $ionicLoading.hide();
-                                    alert(this.result);
-                                    alert(personaFactory.personas.length);
+                                    //alert(this.result);
+                                    //alert(personaFactory.personas.length);
                                     $scope.var.contenidoCsv = this.result;
                                     $scope.csv2Objeto();
-                                    alert(personaFactory.personas.length);
+                                    //alert(personaFactory.personas.length);
                                 };
 
                                 reader.readAsText(file);
@@ -140,6 +140,7 @@ angular.module('app.controllers', [])
                                             } else {
                                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
+                                            $scope.eliminarArchivo();
                                             $scope.guardarArchivo(false);
                                         }
                                         $ionicPopup.alert({
@@ -232,6 +233,49 @@ angular.module('app.controllers', [])
                     $ionicLoading.hide();
                 };
 
+                $scope.eliminarArchivo = function () {
+                    $ionicLoading.show({
+                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
+                    });
+
+                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
+                            fileEntry.remove(function () {
+                                // Archivo removido con exito
+                                $ionicLoading.hide();
+                            }, function (error) {
+                                // Error deleting the file
+                                $ionicLoading.hide();
+                                $ionicPopup.alert({
+                                    title: 'Info',
+                                    template: 'Error borrando el archivo'
+                                });
+                            }, function () {
+                                // The file doesn't exist
+                                $ionicLoading.hide();
+                                $ionicPopup.alert({
+                                    title: 'Info',
+                                    template: 'Error el archivo no existe'
+                                });
+                            });
+
+                        }, function (errorCreateFile) {
+                            $ionicLoading.hide();
+                            $ionicPopup.alert({
+                                title: 'Info',
+                                template: 'Error creando el archivo'
+                            });
+                        });
+                    }, function (errorLoadFs) {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'Info',
+                            template: 'Error cargando el archivo'
+                        });
+                    });
+                    $ionicLoading.hide();
+                };
+
 
                 $scope.subirArchivo = function () {
                     cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
@@ -278,6 +322,7 @@ angular.module('app.controllers', [])
                         personaFactory.personas.splice(idx, 1);
                     }
                     $scope.objeto2Csv();
+                    $scope.eliminarArchivo();
                     $scope.guardarArchivo(false);
                 };
 
