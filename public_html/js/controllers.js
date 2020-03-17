@@ -13,49 +13,51 @@ angular.module('app.controllers', [])
                 };
 
                 $ionicPlatform.ready(function () {
-                    $ionicLoading.show({
-                        template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
-                    });
-                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                        fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
-                            $scope.var.pathCsv = fileEntry.fullPath;
+                    if ($state.current.name === 'menu.ingreso') {
+                        $ionicLoading.show({
+                            template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
+                        });
+                        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                            fs.root.getFile("Download/listado.csv", {create: false, exclusive: false}, function (fileEntry) {
+                                $scope.var.pathCsv = fileEntry.fullPath;
 
-                            fileEntry.file(function (file) {
-                                var reader = new FileReader();
+                                fileEntry.file(function (file) {
+                                    var reader = new FileReader();
 
-                                reader.onloadend = function () {
+                                    reader.onloadend = function () {
+                                        $ionicLoading.hide();
+                                        //alert(this.result);
+                                        //alert(personaFactory.personas.length);
+                                        $scope.var.contenidoCsv = this.result;
+                                        $scope.csv2Objeto();
+                                        //alert(personaFactory.personas.length);
+                                    };
+
+                                    reader.readAsText(file);
+
+                                }, function (errorReadFile) {
                                     $ionicLoading.hide();
-                                    //alert(this.result);
-                                    //alert(personaFactory.personas.length);
-                                    $scope.var.contenidoCsv = this.result;
-                                    $scope.csv2Objeto();
-                                    //alert(personaFactory.personas.length);
-                                };
-
-                                reader.readAsText(file);
-
-                            }, function (errorReadFile) {
+                                    $ionicPopup.alert({
+                                        title: 'Info',
+                                        template: errorReadFile.toString()
+                                    });
+                                });
+                            }, function (errorCreateFile) {
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Info',
-                                    template: errorReadFile.toString()
+                                    template: errorCreateFile.toString()
                                 });
                             });
-                        }, function (errorCreateFile) {
+                        }, function (errorLoadFs) {
                             $ionicLoading.hide();
                             $ionicPopup.alert({
                                 title: 'Info',
-                                template: errorCreateFile.toString()
+                                template: errorLoadFs.toString()
                             });
                         });
-                    }, function (errorLoadFs) {
                         $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Info',
-                            template: errorLoadFs.toString()
-                        });
-                    });
-                    $ionicLoading.hide();
+                    }
                 });
 
                 $scope.getPersonas = function () {
@@ -140,7 +142,7 @@ angular.module('app.controllers', [])
                                             } else {
                                                 $scope.var.contenidoCsv += $scope.var.textoLeido + '\n';
                                             }
-                                            $scope.eliminarArchivo();
+                                            //$scope.eliminarArchivo();
                                             $scope.guardarArchivo(false);
                                         }
                                         $ionicPopup.alert({
@@ -322,7 +324,7 @@ angular.module('app.controllers', [])
                         personaFactory.personas.splice(idx, 1);
                     }
                     $scope.objeto2Csv();
-                    $scope.eliminarArchivo();
+                    //$scope.eliminarArchivo();
                     $scope.guardarArchivo(false);
                 };
 
