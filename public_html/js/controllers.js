@@ -1,27 +1,80 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory', '$webSql',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory', '$webSql', '$timeout',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory, $webSql) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory, $webSql, $timeout) {
+
+                var hoy = new Date();
 
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI\n',
+                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI;TIPO\n',
                     contenidoCsv: '',
                     pathCsv: '',
-                    urlRemota: 'https://www.agurait.com/escaner/visorListado.html'
+                    nombreLugar: '',
+                    urlRemota: 'https://www.agurait.com/escaner/visorListado.html',
+                    fecha: hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear(),
+                    hora: hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds()
                 };
 
                 $scope.db = $webSql.openDatabase('listadoDnis', '1.0', 'Lista de DNI', 2 * 1024 * 1024);
 
+                $scope.getNombreLugar = function () {
+                    return sesionFactory.nombreLugar;
+                };
+
+//                $timeout(function () {
+//                    $scope.cargarNombreLugar();
+//                });
+
+                $scope.cargarNombreLugar = function () {
+                    $scope.var.nombreLugar = sesionFactory.nombreLugar;
+                    if (sesionFactory.nombreLugar === '') {
+                        $ionicPopup.show({
+                            template: '<input type="text" ng-model="var.nombreLugar">',
+                            title: 'Ingrese el nombre de su area',
+                            scope: $scope,
+                            buttons: [
+                                {
+                                    text: '<b>Ok</b>',
+                                    type: 'button-positive',
+                                    onTap: function (e) {
+                                        if ($scope.var.nombreLugar === '') {
+                                            //don't allow the user to close unless he enters wifi password
+                                            e.preventDefault();
+                                        } else {
+                                            let nombreConGuiones = $scope.var.nombreLugar;
+                                            nombreConGuiones = nombreConGuiones.replace(/ /g, '_');
+                                            sesionFactory.nombreLugar = nombreConGuiones.toUpperCase();
+                                            $scope.db.del("lugar", {"NOMBRE": sesionFactory.nombreLugar.toUpperCase()});
+                                            $scope.db.insert('lugar', {"NOMBRE": sesionFactory.nombreLugar.toUpperCase()});
+                                            return $scope.var.nombreLugar.toUpperCase();
+                                        }
+                                    }
+                                }
+                            ]
+                        });
+
+                    }
+                };
+
                 $ionicPlatform.ready(function () {
                     sesionFactory.contador = sesionFactory.contador + 1;
+
                     if ($state.current.name === 'menu.ingreso' && sesionFactory.contador === 1) {
                         $ionicLoading.show({
                             template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                         });
 
+                        $scope.db.selectAll("lugar").then(function (results) {
+                            if (results.rows.length > 0) {
+                                sesionFactory.nombreLugar = results.rows.item(0).NOMBRE.toUpperCase();
+                            } else {
+                                $scope.cargarNombreLugar();
+                            }
+                        });
+                        
                         $scope.db.selectAll("persona").then(function (results) {
                             if (results.rows.length > 0) {
                                 for (let i = 0; i < results.rows.length; i++) {
@@ -33,7 +86,10 @@ angular.module('app.controllers', [])
                                         DNI: results.rows.item(i).DNI,
                                         EJEMPLAR: results.rows.item(i).EJEMPLAR,
                                         FECHA_NACIM: results.rows.item(i).FECHA_NACIM,
-                                        FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI
+                                        FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI,
+                                        TIPO: results.rows.item(i).TIPO,
+                                        FECHA: results.rows.item(i).FECHA,
+                                        HORA: results.rows.item(i).HORA
                                     });
                                 }
                                 $ionicLoading.hide();
@@ -41,7 +97,7 @@ angular.module('app.controllers', [])
                                 $ionicLoading.hide();
                             }
                         });
-                        $ionicLoading.hide();
+                        $ionicLoading.hide(); 
                     }
                 });
 
@@ -53,7 +109,7 @@ angular.module('app.controllers', [])
                     $state.go('menu.listado', {}, {location: "replace"});
                 };
 
-                $scope.abrirEscaner = function () {
+                $scope.abrirEscaner = function (opcionEscaneo) {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
@@ -84,14 +140,24 @@ angular.module('app.controllers', [])
                                                 DNI: vecTextoLeido[4],
                                                 EJEMPLAR: vecTextoLeido[5],
                                                 FECHA_NACIM: vecTextoLeido[6],
-                                                FECHA_EMISION_DNI: vecTextoLeido[7]
+                                                FECHA_EMISION_DNI: vecTextoLeido[7],
+                                                TIPO: opcionEscaneo.toUpperCase(),
+                                                FECHA: $scope.var.fecha,
+                                                HORA: $scope.var.hora
                                             });
 
                                             $scope.db.insert('persona',
-                                                    {"TRAMITE": vecTextoLeido[0], "APELLIDO": vecTextoLeido[1],
-                                                        "NOMBRE": vecTextoLeido[2], "SEXO": vecTextoLeido[3],
-                                                        "DNI": vecTextoLeido[4], "EJEMPLAR": vecTextoLeido[5],
-                                                        "FECHA_NACIM": vecTextoLeido[6], "FECHA_EMISION_DNI": vecTextoLeido[7]
+                                                    {"TRAMITE": vecTextoLeido[0],
+                                                        "APELLIDO": vecTextoLeido[1],
+                                                        "NOMBRE": vecTextoLeido[2],
+                                                        "SEXO": vecTextoLeido[3],
+                                                        "DNI": vecTextoLeido[4],
+                                                        "EJEMPLAR": vecTextoLeido[5],
+                                                        "FECHA_NACIM": vecTextoLeido[6],
+                                                        "FECHA_EMISION_DNI": vecTextoLeido[7],
+                                                        "TIPO": opcionEscaneo.toUpperCase(),
+                                                        "FECHA": $scope.var.fecha,
+                                                        "HORA": $scope.var.hora
                                                     }
                                             ).then(function (results) {
 
@@ -151,7 +217,8 @@ angular.module('app.controllers', [])
                     for (let i = 0; i < personaFactory.personas.length; i++) {
                         contenido += personaFactory.personas[i].TRAMITE + ";" + personaFactory.personas[i].APELLIDO + ";" +
                                 personaFactory.personas[i].NOMBRE + ";" + personaFactory.personas[i].SEXO + ";" + personaFactory.personas[i].DNI + ";" +
-                                personaFactory.personas[i].EJEMPLAR + ";" + personaFactory.personas[i].FECHA_NACIM + ";" + personaFactory.personas[i].FECHA_EMISION_DNI + "\n";
+                                personaFactory.personas[i].EJEMPLAR + ";" + personaFactory.personas[i].FECHA_NACIM + ";" + personaFactory.personas[i].FECHA_EMISION_DNI + ";" +
+                                personaFactory.personas[i].TIPO + "\n";
                     }
                     $scope.var.contenidoCsv = $scope.var.cabeceraCsv + contenido;
 
@@ -204,7 +271,7 @@ angular.module('app.controllers', [])
                     });
                     cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
                         //alert("ftp: conexion ok=" + ok);
-                        cordova.plugin.ftp.upload('/storage/emulated/0/Download/listado.csv', '/listado1.csv', function (percent) {
+                        cordova.plugin.ftp.upload('/storage/emulated/0/Download/listado.csv', '/listado_' + sesionFactory.nombreLugar + '_' + $scope.var.fecha + '.csv', function (percent) {
                             if (percent === 1) {
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
@@ -258,16 +325,39 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.eliminarRegistro = function (idx, dni) {
+
+                    let confirmar;
+
                     if (idx === -1) {
-                        let i = personaFactory.personas.length;
-                        while (personaFactory.personas.length > 0) {
-                            i--;
-                            $scope.db.del("persona", {"DNI": personaFactory.personas[i].DNI});
-                            personaFactory.personas.pop();
-                        }
+                        confirmar = $ionicPopup.confirm({
+                            title: 'Info',
+                            template: 'Esto eliminara todos los registros actuales ¿Seguro desea continuar?',
+                            cancelText: 'No',
+                            okText: 'Si'
+                        });
+                        confirmar.then(function (res) {
+                            if (res) {
+                                let i = personaFactory.personas.length;
+                                while (personaFactory.personas.length > 0) {
+                                    i--;
+                                    $scope.db.del("persona", {"DNI": personaFactory.personas[i].DNI});
+                                    personaFactory.personas.pop();
+                                }
+                            }
+                        });
                     } else {
-                        $scope.db.del("persona", {"DNI": dni});
-                        personaFactory.personas.splice(idx, 1);
+                        confirmar = $ionicPopup.confirm({
+                            title: 'Info',
+                            template: 'Esto eliminara el registro actual ¿Seguro desea continuar?',
+                            cancelText: 'No',
+                            okText: 'Si'
+                        });
+                        confirmar.then(function (res) {
+                            if (res) {
+                                $scope.db.del("persona", {"DNI": dni});
+                                personaFactory.personas.splice(idx, 1);
+                            }
+                        });
                     }
                 };
 

@@ -1,4 +1,4 @@
-<ion-view title="Listado de DNI's" id="page2">
+<ion-view title="Listado de DNI's del {{var.fecha}}" id="page2">
     <ion-nav-buttons side="right" class="has-header">
         <button class="button button-positive icon icon ion-trash-a" ng-click="eliminarRegistro(-1, -1)">
             <ion-icon name="notifications">
@@ -15,6 +15,8 @@
                 <p>Apellido: {{persona.APELLIDO}}</p>
                 <p>Nombre: {{persona.NOMBRE}}</p>
                 <p>Sexo: {{persona.SEXO}}</p>
+                <p>E/S: {{persona.TIPO}}</p>
+                <p>Hora: {{persona.HORA}}</p>
                 <i class="icon ion-android-person icon-accessory"></i>
                 <ion-option-button class="button-assertive"
                                    ng-click="eliminarRegistro($index, persona.DNI)">

@@ -9,7 +9,8 @@ angular.module('app.services', [])
         
         .factory('sesionFactory', [function () {
                 return {
-                    contador: 0
+                    contador: 0,
+                    nombreLugar: ''
                 };
             }])
 

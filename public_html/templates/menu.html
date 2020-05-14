@@ -15,10 +15,11 @@
     <ion-content padding="false" class="side-menu-left has-header ">
       <ion-list id="menu-list1" ng-controller="escanerCtrl">
         <ion-item id="menu-list-item1" ui-sref="menu.ingreso()" menu-close="">Ingreso</ion-item>
-        <ion-item id="menu-list-item2" ng-click="abrirEscaner()" menu-close="">Escanear</ion-item>
+        <ion-item id="menu-list-item2" ng-click="abrirEscaner('ENTRADA')" menu-close="">Escanear ingreso</ion-item>
+        <ion-item id="menu-list-item2" ng-click="abrirEscaner('SALIDA')" menu-close="">Escanear salida</ion-item>
         <ion-item id="menu-list-item3" ng-click="gotoListado()" menu-close="">Listado</ion-item>
-        <ion-item id="menu-list-item4" ng-click="subirArchivo()" menu-close="">Subir archivo</ion-item>
-        <ion-item id="menu-list-item4" ng-click="abrirUrlRemota()" menu-close="">Abrir archivo</ion-item>
+        <ion-item id="menu-list-item4" ng-click="subirArchivo()" menu-close="">Sincronizar</ion-item>
+        <ion-item id="menu-list-item4" ng-click="abrirUrlRemota()" menu-close="">Abrir datos remotos</ion-item>
       </ion-list>
     </ion-content>
   </ion-side-menu>
