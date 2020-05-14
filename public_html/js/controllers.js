@@ -1,8 +1,8 @@
 angular.module('app.controllers', [])
 
-        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory', '$webSql', '$timeout',
+        .controller('escanerCtrl', ['$scope', '$stateParams', '$ionicLoading', '$ionicPopup', '$document', '$window', '$ionicPlatform', 'personaFactory', '$state', 'sesionFactory', '$webSql', '$timeout', 'ionicDatePicker', '$filter',
 
-            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory, $webSql, $timeout) {
+            function ($scope, $stateParams, $ionicLoading, $ionicPopup, $document, $window, $ionicPlatform, personaFactory, $state, sesionFactory, $webSql, $timeout, ionicDatePicker, $filter) {
 
                 var hoy = new Date();
 
@@ -66,7 +66,7 @@ angular.module('app.controllers', [])
                         $scope.db.selectAll("lugar").then(function (results) {
                             if (results.rows.length > 0) {
                                 sesionFactory.nombreLugar = results.rows.item(0).NOMBRE.toUpperCase();
-                                $scope.var.nombreLugar = sesionFactory.nombreLugar;                                            
+                                $scope.var.nombreLugar = sesionFactory.nombreLugar;
                             } else {
                                 $scope.cargarNombreLugar();
                             }
@@ -99,7 +99,8 @@ angular.module('app.controllers', [])
                 });
 
                 $scope.getPersonas = function () {
-                    return personaFactory.personas;
+                    const arrayAux = $filter('filter')(personaFactory.personas, {FECHA: $scope.var.fecha});
+                    return arrayAux;
                 };
 
                 $scope.gotoListado = function () {
@@ -123,7 +124,8 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
-                                            if (personaFactory.personas[i].DNI === vecTextoLeido[4]) {
+                                            if (personaFactory.personas[i].DNI === vecTextoLeido[4]
+                                                    && personaFactory.personas[i].TIPO === opcionEscaneo) {
                                                 existe = true;
                                                 break;
                                             }
@@ -359,18 +361,21 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.mostrarDatePicker = function ($event) {
-                    var options = {
-                        date: new Date(),
-                        mode: 'date'
-                    };
-                    datePicker.show(options, function (date) {
-                        if (date !== 'Invalid Date') {
+                    var opciones = {
+                        callback: function (val) {  //Mandatory
+                            let date = new Date(val);
                             $scope.var.fecha = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-                        } else {
-                            $scope.var.fecha = hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear(); 
-                        }
-                    });
-                    $event.stopPropagation();
+                        },
+                        disabledDates: [],
+                        inputDate: new Date(),
+                        mondayFirst: true,
+                        disableWeekdays: [],
+                        closeOnSelect: false,
+                        templateType: 'popup',
+                        setLabel: 'Ok',
+                        closeLabel: 'Cancelar'
+                    };
+                    ionicDatePicker.openDatePicker(opciones);
                 };
 
             }])
