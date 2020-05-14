@@ -87,6 +87,7 @@
     <plugin name="phonegap-plugin-barcodescanner" source="npm" />
     <plugin name="cordova-plugin-file" source="npm" />
     <plugin name="cordova-plugin-ftp" source="npm" />
+    <plugin name="cordova-plugin-datepicker" source="npm" />
     
     
     <icon src="mdpi.png" platform="android" qualifier="mdpi" />

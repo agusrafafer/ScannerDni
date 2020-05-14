@@ -9,11 +9,11 @@ angular.module('app.controllers', [])
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI;TIPO\n',
+                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI;TIPO;FECHA;HORA\n',
                     contenidoCsv: '',
                     pathCsv: '',
                     nombreLugar: '',
-                    urlRemota: 'https://www.agurait.com/escaner/visorListado.html',
+                    urlRemota: 'https://www.agurait.com/escaner/visorListado.php',
                     fecha: hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear(),
                     hora: hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds()
                 };
@@ -23,10 +23,6 @@ angular.module('app.controllers', [])
                 $scope.getNombreLugar = function () {
                     return sesionFactory.nombreLugar;
                 };
-
-//                $timeout(function () {
-//                    $scope.cargarNombreLugar();
-//                });
 
                 $scope.cargarNombreLugar = function () {
                     $scope.var.nombreLugar = sesionFactory.nombreLugar;
@@ -74,8 +70,8 @@ angular.module('app.controllers', [])
                                 $scope.cargarNombreLugar();
                             }
                         });
-                        
-                        $scope.db.selectAll("persona").then(function (results) {
+
+                        $scope.db.select("persona", "FECHA=" + $scope.var.fecha).then(function (results) {
                             if (results.rows.length > 0) {
                                 for (let i = 0; i < results.rows.length; i++) {
                                     personaFactory.personas.push({
@@ -97,7 +93,7 @@ angular.module('app.controllers', [])
                                 $ionicLoading.hide();
                             }
                         });
-                        $ionicLoading.hide(); 
+                        $ionicLoading.hide();
                     }
                 });
 
@@ -218,13 +214,13 @@ angular.module('app.controllers', [])
                         contenido += personaFactory.personas[i].TRAMITE + ";" + personaFactory.personas[i].APELLIDO + ";" +
                                 personaFactory.personas[i].NOMBRE + ";" + personaFactory.personas[i].SEXO + ";" + personaFactory.personas[i].DNI + ";" +
                                 personaFactory.personas[i].EJEMPLAR + ";" + personaFactory.personas[i].FECHA_NACIM + ";" + personaFactory.personas[i].FECHA_EMISION_DNI + ";" +
-                                personaFactory.personas[i].TIPO + "\n";
+                                personaFactory.personas[i].TIPO + ";" + personaFactory.personas[i].FECHA + ";" + personaFactory.personas[i].HORA + "\n";
                     }
                     $scope.var.contenidoCsv = $scope.var.cabeceraCsv + contenido;
 
 
                     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                        fs.root.getFile("Download/listado.csv", {create: true, exclusive: false}, function (fileEntry) {
+                        fs.root.getFile("Download/listado_" + $scope.var.fecha + ".csv", {create: true, exclusive: false}, function (fileEntry) {
                             // fileEntry.name == 'someFile.txt'
                             // fileEntry.fullPath == '/someFile.txt'
                             $scope.var.pathCsv = fileEntry.fullPath;
@@ -271,7 +267,7 @@ angular.module('app.controllers', [])
                     });
                     cordova.plugin.ftp.connect('ftp.agurait.com', 'u542060829.escaner', 'escaner', function (ok) {
                         //alert("ftp: conexion ok=" + ok);
-                        cordova.plugin.ftp.upload('/storage/emulated/0/Download/listado.csv', '/listado_' + sesionFactory.nombreLugar + '_' + $scope.var.fecha + '.csv', function (percent) {
+                        cordova.plugin.ftp.upload('/storage/emulated/0/Download/listado_' + $scope.var.fecha + '.csv', '/listado_' + sesionFactory.nombreLugar + '_' + $scope.var.fecha + '.csv', function (percent) {
                             if (percent === 1) {
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
@@ -319,7 +315,7 @@ angular.module('app.controllers', [])
 
                     confirmPopup.then(function (res) {
                         if (res) {
-                            $window.open($scope.var.urlRemota, "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                            $window.open($scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '', "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
                         }
                     });
                 };
@@ -359,6 +355,22 @@ angular.module('app.controllers', [])
                             }
                         });
                     }
+                };
+
+
+                $scope.showDatePicker = function () {
+                    var options = {
+                        date: new Date(),
+                        mode: 'date'
+                    };
+                    datePicker.show(options, function (date) {
+                        if (date !== 'Invalid Date') {
+                            alert('Dato invalido')
+                        } else {
+                            alert("Date came" + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear());
+                        }
+                    });
+                    //$event.stopPropagation();
                 };
 
             }])
