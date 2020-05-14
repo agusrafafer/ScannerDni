@@ -359,7 +359,6 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.mostrarDatePicker = function ($event) {
-                    $event.stopPropagation();
                     var options = {
                         date: new Date(),
                         mode: 'date'
@@ -371,6 +370,7 @@ angular.module('app.controllers', [])
                             $scope.var.fecha = hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear(); 
                         }
                     });
+                    $event.stopPropagation();
                 };
 
             }])
