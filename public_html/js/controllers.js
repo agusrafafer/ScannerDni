@@ -66,6 +66,7 @@ angular.module('app.controllers', [])
                         $scope.db.selectAll("lugar").then(function (results) {
                             if (results.rows.length > 0) {
                                 sesionFactory.nombreLugar = results.rows.item(0).NOMBRE.toUpperCase();
+                                $scope.var.nombreLugar = sesionFactory.nombreLugar;                                            
                             } else {
                                 $scope.cargarNombreLugar();
                             }
@@ -357,18 +358,19 @@ angular.module('app.controllers', [])
                     }
                 };
 
-
-                $scope.showDatePicker = function ($event) {
+                $scope.mostrarDatePicker = function ($event) {
+                    $event.stopPropagation();
                     var options = {
                         date: new Date(),
                         mode: 'date'
                     };
                     datePicker.show(options, function (date) {
                         if (date !== 'Invalid Date') {
-                            alert("Date: " + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear());
+                            $scope.var.fecha = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+                        } else {
+                            $scope.var.fecha = hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear(); 
                         }
                     });
-                    $event.stopPropagation();
                 };
 
             }])
