@@ -358,19 +358,17 @@ angular.module('app.controllers', [])
                 };
 
 
-                $scope.showDatePicker = function () {
+                $scope.showDatePicker = function ($event) {
                     var options = {
                         date: new Date(),
                         mode: 'date'
                     };
                     datePicker.show(options, function (date) {
                         if (date !== 'Invalid Date') {
-                            alert('Dato invalido')
-                        } else {
-                            alert("Date came" + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear());
+                            alert("Date: " + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear());
                         }
                     });
-                    //$event.stopPropagation();
+                    $event.stopPropagation();
                 };
 
             }])

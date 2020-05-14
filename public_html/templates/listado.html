@@ -1,6 +1,6 @@
 <ion-view title="Listado del {{var.fecha}}" id="page2">
     <ion-nav-buttons side="right" class="has-header">
-        <button class="button button-balanced icon icon ion-android-calendar" style="margin-right: 10px" ng-click="showDatePicker()">
+        <button class="button button-balanced icon icon ion-android-calendar" style="margin-right: 10px" ng-click="showDatePicker($event)">
         </button>
         <button class="button button-positive icon icon ion-trash-a" ng-click="eliminarRegistro(-1, -1)">
             <ion-icon name="notifications">
