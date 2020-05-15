@@ -353,8 +353,8 @@ angular.module('app.controllers', [])
                             if (res) {
                                 let i = personaFactory.personas.length;
                                 while (personaFactory.personas.length > 0) {
-                                    i--;
-                                    $scope.db.del("persona", {"DNI": personaFactory.personas[i].DNI});
+                                    i--; 
+                                    $scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
                                     personaFactory.personas.pop();
                                 }
                             }
