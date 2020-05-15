@@ -129,7 +129,9 @@ angular.module('app.controllers', [])
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
                                             if (personaFactory.personas[i].DNI === vecTextoLeido[4]
-                                                    && personaFactory.personas[i].TIPO === opcionEscaneo) {
+                                                    && personaFactory.personas[i].TIPO === opcionEscaneo
+                                                    && personaFactory.personas[i].FECHA === $scope.var.fecha
+                                                    && personaFactory.personas[i].HORA === $scope.var.hora) {
                                                 existe = true;
                                                 break;
                                             }
@@ -201,7 +203,6 @@ angular.module('app.controllers', [])
                         $ionicLoading.hide();
                     }
                 };
-
 
                 $scope.guardarArchivo = function () {
                     if (personaFactory.personas.length <= 0) {
@@ -357,7 +358,8 @@ angular.module('app.controllers', [])
                                 let i = personaFactory.personas.length;
                                 while (personaFactory.personas.length > 0) {
                                     i--; 
-                                    $scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
+                                    $scope.db.del("persona", {"id": personaFactory.personas[i].id});
+                                    //$scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
                                     personaFactory.personas.pop();
                                 }
                             }
@@ -371,7 +373,8 @@ angular.module('app.controllers', [])
                         });
                         confirmar.then(function (res) {
                             if (res) {
-                                $scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": persona.TIPO});
+                                $scope.db.del("persona", {"id": persona.id});
+                                //$scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": {"operator":'=', "value": persona.TIPO, "union":'AND'}, "FECHA": {"operator":'=', "value": persona.FECHA, "union":'AND'}, "HORA": persona.HORA});
                                 personaFactory.personas.splice(idx, 1);
                             }
                         });
@@ -383,6 +386,7 @@ angular.module('app.controllers', [])
                         callback: function (val) {  //Mandatory
                             let date = new Date(val);
                             $scope.var.fecha = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+                            $scope.var.hora = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
                             $scope.gotoListado();
                         },
                         disabledDates: [],
