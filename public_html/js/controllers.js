@@ -358,8 +358,8 @@ angular.module('app.controllers', [])
                                 let i = personaFactory.personas.length;
                                 while (personaFactory.personas.length > 0) {
                                     i--; 
-                                    $scope.db.del("persona", {"id": personaFactory.personas[i].id});
-                                    //$scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
+                                    //$scope.db.del("persona", {"id": personaFactory.personas[i].id});
+                                    $scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
                                     personaFactory.personas.pop();
                                 }
                             }
@@ -373,8 +373,8 @@ angular.module('app.controllers', [])
                         });
                         confirmar.then(function (res) {
                             if (res) {
-                                $scope.db.del("persona", {"id": persona.id});
-                                //$scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": {"operator":'=', "value": persona.TIPO, "union":'AND'}, "FECHA": {"operator":'=', "value": persona.FECHA, "union":'AND'}, "HORA": persona.HORA});
+                                //$scope.db.del("persona", {"id": persona.id});
+                                $scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": {"operator":'=', "value": persona.TIPO, "union":'AND'}, "FECHA": {"operator":'=', "value": persona.FECHA, "union":'AND'}, "HORA": persona.HORA});
                                 personaFactory.personas.splice(idx, 1);
                             }
                         });
