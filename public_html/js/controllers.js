@@ -276,7 +276,7 @@ angular.module('app.controllers', [])
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Info',
-                                    template: 'Datos subidos con exito a: <br/>' + $scope.var.urlRemota
+                                    template: 'Datos subidos con exito!'
                                 });
 
                                 var confirmPopup = $ionicPopup.confirm({
