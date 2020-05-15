@@ -109,6 +109,9 @@ angular.module('app.controllers', [])
                 };
 
                 $scope.abrirEscaner = function (opcionEscaneo) {
+                    hoy = new Date();
+                    $scope.var.fecha =  hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear();
+                    $scope.var.hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
