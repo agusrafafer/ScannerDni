@@ -23,7 +23,7 @@ angular.module('app.controllers', [])
                 $scope.getNombreLugar = function () {
                     return sesionFactory.nombreLugar;
                 };
-                
+
                 $scope.getPersonas = function () {
                     const arrayAux = $filter('filter')(personaFactory.personas, {FECHA: $scope.var.fecha});
                     return arrayAux;
@@ -288,7 +288,7 @@ angular.module('app.controllers', [])
 
                                 confirmPopup.then(function (res) {
                                     if (res) {
-                                        $window.open($scope.var.urlRemota, "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                                        $window.open($scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '', "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
                                     }
                                 });
                             }
@@ -312,7 +312,7 @@ angular.module('app.controllers', [])
                 $scope.abrirUrlRemota = function () {
                     var confirmPopup = $ionicPopup.confirm({
                         title: 'Info',
-                        template: '¿Desea abrir el archivo remoto? <br />' + $scope.var.urlRemota,
+                        template: '¿Desea abrir el archivo remoto? <br />' + $scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '',
                         okText: 'Si',
                         cancelText: 'No'
                     });
@@ -321,6 +321,20 @@ angular.module('app.controllers', [])
                         if (res) {
                             $window.open($scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '', "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
                         }
+                    });
+                };
+
+                $scope.verUrlRemota = function () {
+                    $ionicPopup.show({
+                        template: "<p style='-webkit-user-select: text;-moz-user-select: text;-ms-user-select: text;user-select: text;'>" + $scope.var.urlRemota + "?lugar=" + sesionFactory.nombreLugar + "&fecha=" + $scope.var.fecha + "</p>",
+                        title: 'Abra esta URL en su PC',
+                        scope: $scope,
+                        buttons: [
+                            {
+                                text: '<b>Ok</b>',
+                                type: 'button-positive'
+                            }
+                        ]
                     });
                 };
 
