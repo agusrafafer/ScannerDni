@@ -23,6 +23,11 @@ angular.module('app.controllers', [])
                 $scope.getNombreLugar = function () {
                     return sesionFactory.nombreLugar;
                 };
+                
+                $scope.getPersonas = function () {
+                    const arrayAux = $filter('filter')(personaFactory.personas, {FECHA: $scope.var.fecha});
+                    return arrayAux;
+                };
 
                 $scope.cargarNombreLugar = function () {
                     $scope.var.nombreLugar = sesionFactory.nombreLugar;
@@ -55,53 +60,49 @@ angular.module('app.controllers', [])
                     }
                 };
 
-                $ionicPlatform.ready(function () {
+                $scope.$on('$ionicView.afterEnter', function () {
                     sesionFactory.contador = sesionFactory.contador + 1;
-
                     if ($state.current.name === 'menu.ingreso' && sesionFactory.contador === 1) {
                         $ionicLoading.show({
                             template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                         });
 
-                        $scope.db.selectAll("lugar").then(function (results) {
-                            if (results.rows.length > 0) {
-                                sesionFactory.nombreLugar = results.rows.item(0).NOMBRE.toUpperCase();
-                                $scope.var.nombreLugar = sesionFactory.nombreLugar;
-                            } else {
-                                $scope.cargarNombreLugar();
-                            }
-                        });
-
-                        $scope.db.select("persona", "FECHA=" + $scope.var.fecha).then(function (results) {
-                            if (results.rows.length > 0) {
-                                for (let i = 0; i < results.rows.length; i++) {
-                                    personaFactory.personas.push({
-                                        TRAMITE: results.rows.item(i).TRAMITE,
-                                        APELLIDO: results.rows.item(i).APELLIDO,
-                                        NOMBRE: results.rows.item(i).NOMBRE,
-                                        SEXO: results.rows.item(i).SEXO,
-                                        DNI: results.rows.item(i).DNI,
-                                        EJEMPLAR: results.rows.item(i).EJEMPLAR,
-                                        FECHA_NACIM: results.rows.item(i).FECHA_NACIM,
-                                        FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI,
-                                        TIPO: results.rows.item(i).TIPO,
-                                        FECHA: results.rows.item(i).FECHA,
-                                        HORA: results.rows.item(i).HORA
-                                    });
+                        $timeout(function () {
+                            $scope.db.selectAll("lugar").then(function (results) {
+                                if (results.rows.length > 0) {
+                                    sesionFactory.nombreLugar = results.rows.item(0).NOMBRE.toUpperCase();
+                                    $scope.var.nombreLugar = sesionFactory.nombreLugar;
+                                } else {
+                                    $scope.cargarNombreLugar();
                                 }
-                                $ionicLoading.hide();
-                            } else {
-                                $ionicLoading.hide();
-                            }
-                        });
-                        $ionicLoading.hide();
+                            });
+
+                            $scope.db.select("persona", {"FECHA": $scope.var.fecha}).then(function (results) {
+                                if (results.rows.length > 0) {
+                                    for (let i = 0; i < results.rows.length; i++) {
+                                        personaFactory.personas.push({
+                                            TRAMITE: results.rows.item(i).TRAMITE,
+                                            APELLIDO: results.rows.item(i).APELLIDO,
+                                            NOMBRE: results.rows.item(i).NOMBRE,
+                                            SEXO: results.rows.item(i).SEXO,
+                                            DNI: results.rows.item(i).DNI,
+                                            EJEMPLAR: results.rows.item(i).EJEMPLAR,
+                                            FECHA_NACIM: results.rows.item(i).FECHA_NACIM,
+                                            FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI,
+                                            TIPO: results.rows.item(i).TIPO,
+                                            FECHA: results.rows.item(i).FECHA,
+                                            HORA: results.rows.item(i).HORA
+                                        });
+                                    }
+                                    $ionicLoading.hide();
+                                } else {
+                                    $ionicLoading.hide();
+                                }
+                            });
+                        }, 1000);
+                        //$ionicLoading.hide();
                     }
                 });
-
-                $scope.getPersonas = function () {
-                    const arrayAux = $filter('filter')(personaFactory.personas, {FECHA: $scope.var.fecha});
-                    return arrayAux;
-                };
 
                 $scope.gotoListado = function () {
                     $state.go('menu.listado', {}, {location: "replace"});
@@ -203,7 +204,7 @@ angular.module('app.controllers', [])
                     if (personaFactory.personas.length <= 0) {
                         $ionicPopup.alert({
                             title: 'Info',
-                            template: 'No hay datos para subir'
+                            template: 'No hay datos para sincronizar'
                         });
                         return;
                     }
@@ -365,6 +366,7 @@ angular.module('app.controllers', [])
                         callback: function (val) {  //Mandatory
                             let date = new Date(val);
                             $scope.var.fecha = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+                            $scope.gotoListado();
                         },
                         disabledDates: [],
                         inputDate: new Date(),

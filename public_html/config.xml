@@ -6,9 +6,9 @@
         version="0.0.1" 
         versionCode="001" 
         android-versionCode="001">
-    <name>Escaner DNI</name>
+    <name>Escaner de Ingreso/Egreso</name>
     <description>
-        App para escaneo de DNI's.
+        App para escaneo de Ingreso y Egreso de personal.
     </description>
     <author email="agusrafafer@gmail.com" href="http://www.agura.com.ar">
         Agura
@@ -87,7 +87,6 @@
     <plugin name="phonegap-plugin-barcodescanner" source="npm" />
     <plugin name="cordova-plugin-file" source="npm" />
     <plugin name="cordova-plugin-ftp" source="npm" />
-    <plugin name="cordova-plugin-datepicker" source="npm" />
     
     
     <icon src="mdpi.png" platform="android" qualifier="mdpi" />
@@ -95,12 +94,12 @@
     <icon src="xhdpi.png" platform="android" qualifier="xhdpi" />
     <icon src="xxhdpi.png" platform="android" qualifier="xxhdpi" />
     
-    <!--<gap:splash src="splash-hdpi.png" />
+    <gap:splash src="splash-hdpi.png" />
     
     
     <splash src="splash-ldpi.png" platform="android" qualifier="ldpi" />
     <splash src="splash-mdpi.png" platform="android" qualifier="mdpi" />
     <splash src="splash-hdpi.png" platform="android" qualifier="hdpi" />
-    <splash src="splash-xhdpi.png" platform="android" qualifier="xhdpi" />-->
+    <splash src="splash-xhdpi.png" platform="android" qualifier="xhdpi" />
         
 </widget>

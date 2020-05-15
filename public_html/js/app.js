@@ -16,7 +16,12 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
         .run(function ($ionicPlatform, $webSql) {
             $ionicPlatform.ready(function () {
                 let db = $webSql.openDatabase('listadoDnis', '1.0', 'Lista de DNI', 2 * 1024 * 1024);
-                //TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI
+                db.createTable('lugar', {
+                    "NOMBRE": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    }
+                });
                 db.createTable('persona', {
                     "id": {
                         "type": "INTEGER",
@@ -55,14 +60,22 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
                     "FECHA_EMISION_DNI": {
                         "type": "TEXT",
                         "null": "NOT NULL"
-                    }
-                });
-                db.createTable('lugar', {
-                    "NOMBRE": {
+                    },
+                    "TIPO": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "FECHA": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
+                    },
+                    "HORA": {
                         "type": "TEXT",
                         "null": "NOT NULL"
                     }
+                    
                 });
+                
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
