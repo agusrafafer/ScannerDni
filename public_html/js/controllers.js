@@ -338,7 +338,7 @@ angular.module('app.controllers', [])
                     });
                 };
 
-                $scope.eliminarRegistro = function (idx, dni) {
+                $scope.eliminarRegistro = function (idx, persona) {
 
                     let confirmar;
 
@@ -368,7 +368,7 @@ angular.module('app.controllers', [])
                         });
                         confirmar.then(function (res) {
                             if (res) {
-                                $scope.db.del("persona", {"DNI": dni});
+                                $scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": persona.TIPO});
                                 personaFactory.personas.splice(idx, 1);
                             }
                         });
