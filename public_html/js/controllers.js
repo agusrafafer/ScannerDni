@@ -79,6 +79,7 @@ angular.module('app.controllers', [])
 
                             $scope.db.select("persona", {"FECHA": $scope.var.fecha}).then(function (results) {
                                 if (results.rows.length > 0) {
+                                    personaFactory.personas = [];
                                     for (let i = 0; i < results.rows.length; i++) {
                                         personaFactory.personas.push({
                                             TRAMITE: results.rows.item(i).TRAMITE,
@@ -110,7 +111,7 @@ angular.module('app.controllers', [])
 
                 $scope.abrirEscaner = function (opcionEscaneo) {
                     hoy = new Date();
-                    $scope.var.fecha =  hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear();
+                    $scope.var.fecha = hoy.getDate() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getFullYear();
                     $scope.var.hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
@@ -357,9 +358,9 @@ angular.module('app.controllers', [])
                             if (res) {
                                 let i = personaFactory.personas.length;
                                 while (personaFactory.personas.length > 0) {
-                                    i--; 
+                                    i--;
                                     //$scope.db.del("persona", {"id": personaFactory.personas[i].id});
-                                    $scope.db.del("persona", {"DNI": {"operator":'=', "value": personaFactory.personas[i].DNI, "union":'AND'},"TIPO": personaFactory.personas[i].TIPO});
+                                    $scope.db.del("persona", {"DNI": {"operator": '=', "value": personaFactory.personas[i].DNI, "union": 'AND'}, "TIPO": personaFactory.personas[i].TIPO});
                                     personaFactory.personas.pop();
                                 }
                             }
@@ -374,7 +375,7 @@ angular.module('app.controllers', [])
                         confirmar.then(function (res) {
                             if (res) {
                                 //$scope.db.del("persona", {"id": persona.id});
-                                $scope.db.del("persona", {"DNI": {"operator":'=', "value": persona.DNI, "union":'AND'},"TIPO": {"operator":'=', "value": persona.TIPO, "union":'AND'}, "FECHA": {"operator":'=', "value": persona.FECHA, "union":'AND'}, "HORA": persona.HORA});
+                                $scope.db.del("persona", {"DNI": {"operator": '=', "value": persona.DNI, "union": 'AND'}, "TIPO": {"operator": '=', "value": persona.TIPO, "union": 'AND'}, "FECHA": {"operator": '=', "value": persona.FECHA, "union": 'AND'}, "HORA": persona.HORA});
                                 personaFactory.personas.splice(idx, 1);
                             }
                         });
@@ -387,7 +388,34 @@ angular.module('app.controllers', [])
                             let date = new Date(val);
                             $scope.var.fecha = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
                             $scope.var.hora = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-                            $scope.gotoListado();
+
+                            $ionicLoading.show({
+                                template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
+                            });
+                            $scope.db.select("persona", {"FECHA": $scope.var.fecha}).then(function (results) {
+                                if (results.rows.length > 0) {
+                                    personaFactory.personas = [];
+                                    for (let i = 0; i < results.rows.length; i++) {
+                                        personaFactory.personas.push({
+                                            TRAMITE: results.rows.item(i).TRAMITE,
+                                            APELLIDO: results.rows.item(i).APELLIDO,
+                                            NOMBRE: results.rows.item(i).NOMBRE,
+                                            SEXO: results.rows.item(i).SEXO,
+                                            DNI: results.rows.item(i).DNI,
+                                            EJEMPLAR: results.rows.item(i).EJEMPLAR,
+                                            FECHA_NACIM: results.rows.item(i).FECHA_NACIM,
+                                            FECHA_EMISION_DNI: results.rows.item(i).FECHA_EMISION_DNI,
+                                            TIPO: results.rows.item(i).TIPO,
+                                            FECHA: results.rows.item(i).FECHA,
+                                            HORA: results.rows.item(i).HORA
+                                        });
+                                    }
+                                    $ionicLoading.hide();
+                                } else {
+                                    $ionicLoading.hide();
+                                }
+                            });
+
                         },
                         disabledDates: [],
                         inputDate: new Date(),
