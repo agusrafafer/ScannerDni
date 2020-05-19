@@ -1,12 +1,12 @@
 <ion-view title="Lista: {{var.fecha}}" id="page2">
     <ion-nav-buttons side="right" class="has-header">
-        <button class="button button-balanced icon icon ion-android-calendar" style="margin-right: 10px" ng-click="mostrarDatePicker($event)">
+        <!--<button class="button button-balanced icon icon ion-android-calendar" style="margin-right: 10px" ng-click="mostrarDatePicker($event)">
         </button>
         <button class="button button-positive icon icon ion-trash-a" ng-click="eliminarRegistro(-1, -1)">
             <ion-icon name="notifications">
                 <ion-badge class="badge badge-assertive" style="left: -10px;">{{getPersonas().length}}</ion-badge>
             </ion-icon>
-        </button>
+        </button>-->
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
         <ion-list>            
@@ -20,10 +20,10 @@
                 <p>E/S: <b>{{persona.TIPO}}</b></p>
                 <p>Hora: <b>{{persona.HORA}}</b></p>
                 <i class="icon ion-android-person icon-accessory"></i>
-                <ion-option-button class="button-assertive"
+                <!-- <ion-option-button class="button-assertive"
                                    ng-click="eliminarRegistro($index, persona)">
                     <i class="icon ion-trash-a"></i>
-                </ion-option-button>
+                </ion-option-button>-->
             </ion-item>
             <ion-item ng-hide="getPersonas().length">
                 <h2>Listado vacio</h2>
