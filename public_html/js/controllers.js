@@ -176,6 +176,7 @@ angular.module('app.controllers', [])
                                                     'Apellido: ' + vecTextoLeido[1] + "<br/>" +
                                                     'Nombre: ' + vecTextoLeido[2]
                                         });
+                                        $scope.guardarArchivo();
                                     }
 
                                 },
@@ -293,7 +294,8 @@ angular.module('app.controllers', [])
 
                                 confirmPopup.then(function (res) {
                                     if (res) {
-                                        $window.open($scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '', "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                                        let url = $scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '';
+                                        cordova.InAppBrowser.open(url, "_system");
                                     }
                                 });
                             }
@@ -324,7 +326,8 @@ angular.module('app.controllers', [])
 
                     confirmPopup.then(function (res) {
                         if (res) {
-                            $window.open($scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '', "_blank", "location=yes,clearsessioncache=yes,clearcache=yes");
+                            let url = $scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '';
+                            cordova.InAppBrowser.open(url, "_system");
                         }
                     });
                 };
