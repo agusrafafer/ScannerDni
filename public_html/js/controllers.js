@@ -129,7 +129,7 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
-                                            if (personaFactory.personas[i].DNI === vecTextoLeido[4]
+                                            if ((personaFactory.personas[i].DNI === vecTextoLeido[4] || personaFactory.personas[i].DNI === vecTextoLeido[1])
                                                     && personaFactory.personas[i].TIPO === opcionEscaneo
                                                     && personaFactory.personas[i].FECHA === $scope.var.fecha
                                                     && personaFactory.personas[i].HORA === $scope.var.hora) {
@@ -138,19 +138,39 @@ angular.module('app.controllers', [])
                                             }
                                         }
                                         if (!existe) {
-                                            personaFactory.personas.push({
-                                                TRAMITE: vecTextoLeido[0],
-                                                APELLIDO: vecTextoLeido[1],
-                                                NOMBRE: vecTextoLeido[2],
-                                                SEXO: vecTextoLeido[3],
-                                                DNI: vecTextoLeido[4],
-                                                EJEMPLAR: vecTextoLeido[5],
-                                                FECHA_NACIM: vecTextoLeido[6],
-                                                FECHA_EMISION_DNI: vecTextoLeido[7],
-                                                TIPO: opcionEscaneo.toUpperCase(),
-                                                FECHA: $scope.var.fecha,
-                                                HORA: $scope.var.hora
-                                            });
+                                            let fecNac = vecTextoLeido[6];
+                                            //Si en la posicion 6 del vector no hay una fecha de nacimiento
+                                            //entonces el escaneo es para un codigo qr que no es el habitual
+                                            //en los dni's
+                                            if (!validarFecha(fecNac)) {
+                                                personaFactory.personas.push({
+                                                    TRAMITE: '',
+                                                    APELLIDO: vecTextoLeido[4],
+                                                    NOMBRE: vecTextoLeido[5],
+                                                    SEXO: '',
+                                                    DNI: vecTextoLeido[1],
+                                                    EJEMPLAR: vecTextoLeido[2],
+                                                    FECHA_NACIM: vecTextoLeido[7],
+                                                    FECHA_EMISION_DNI: '',
+                                                    TIPO: opcionEscaneo.toUpperCase(),
+                                                    FECHA: $scope.var.fecha,
+                                                    HORA: $scope.var.hora
+                                                });
+                                            } else {
+                                                personaFactory.personas.push({
+                                                    TRAMITE: vecTextoLeido[0],
+                                                    APELLIDO: vecTextoLeido[1],
+                                                    NOMBRE: vecTextoLeido[2],
+                                                    SEXO: vecTextoLeido[3],
+                                                    DNI: vecTextoLeido[4],
+                                                    EJEMPLAR: vecTextoLeido[5],
+                                                    FECHA_NACIM: vecTextoLeido[6],
+                                                    FECHA_EMISION_DNI: vecTextoLeido[7],
+                                                    TIPO: opcionEscaneo.toUpperCase(),
+                                                    FECHA: $scope.var.fecha,
+                                                    HORA: $scope.var.hora
+                                                });
+                                            }
 
                                             $scope.db.insert('persona',
                                                     {"TRAMITE": vecTextoLeido[0],
@@ -169,14 +189,16 @@ angular.module('app.controllers', [])
 
                                             });
                                         }
-                                        $ionicPopup.alert({
+                                        let alertPopup = $ionicPopup.alert({
                                             title: 'Info',
                                             template: 'Escaneo exitoso: <br/>' +
                                                     'DNI: ' + vecTextoLeido[4] + "<br/>" +
                                                     'Apellido: ' + vecTextoLeido[1] + "<br/>" +
                                                     'Nombre: ' + vecTextoLeido[2]
                                         });
-                                        $scope.guardarArchivo();
+                                        alertPopup.then(function (res) {
+                                            $scope.guardarArchivo(false);
+                                        });
                                     }
 
                                 },
@@ -206,7 +228,7 @@ angular.module('app.controllers', [])
                     }
                 };
 
-                $scope.guardarArchivo = function () {
+                $scope.guardarArchivo = function (preguntarSiAbrirArchivoRemoto) {
                     if (personaFactory.personas.length <= 0) {
                         $ionicPopup.alert({
                             title: 'Info',
@@ -238,7 +260,7 @@ angular.module('app.controllers', [])
 
                                 fileWriter.onwriteend = function () {
                                     $ionicLoading.hide();
-                                    $scope.subirArchivo();
+                                    $scope.subirArchivo(preguntarSiAbrirArchivoRemoto);
                                 };
 
                                 fileWriter.onerror = function (e) {
@@ -271,7 +293,7 @@ angular.module('app.controllers', [])
                     $ionicLoading.hide();
                 };
 
-                $scope.subirArchivo = function () {
+                $scope.subirArchivo = function (preguntarSiAbrirArchivoRemoto) {
                     $ionicLoading.show({
                         template: '<ion-spinner icon=\"android\" class=\"spinner-energized\"></ion-spinner>'
                     });
@@ -285,19 +307,21 @@ angular.module('app.controllers', [])
                                     template: 'Datos subidos con exito!'
                                 });
 
-                                var confirmPopup = $ionicPopup.confirm({
-                                    title: 'Info',
-                                    template: '¿Desea abrir el archivo remoto?',
-                                    okText: 'Si',
-                                    cancelText: 'No'
-                                });
+                                if (preguntarSiAbrirArchivoRemoto) {
+                                    var confirmPopup = $ionicPopup.confirm({
+                                        title: 'Info',
+                                        template: '¿Desea abrir el archivo remoto?',
+                                        okText: 'Si',
+                                        cancelText: 'No'
+                                    });
 
-                                confirmPopup.then(function (res) {
-                                    if (res) {
-                                        let url = $scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '';
-                                        cordova.InAppBrowser.open(url, "_system");
-                                    }
-                                });
+                                    confirmPopup.then(function (res) {
+                                        if (res) {
+                                            let url = $scope.var.urlRemota + '?lugar=' + sesionFactory.nombreLugar + '&fecha=' + $scope.var.fecha + '';
+                                            cordova.InAppBrowser.open(url, "_system");
+                                        }
+                                    });
+                                }
                             }
                         }, function (error) {
                             $ionicLoading.hide();
