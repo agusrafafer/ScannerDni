@@ -192,11 +192,10 @@ angular.module('app.controllers', [])
                                         //Si en la posicion 6 del vector no hay una fecha de nacimiento
                                         //entonces el escaneo es para un codigo qr que no es el habitual
                                         //en los dni's
-                                        let fecNac = vecTextoLeido[6];
                                         let dniLeido = vecTextoLeido[4];
                                         let apeLeido = vecTextoLeido[1];
                                         let nomLeido = vecTextoLeido[2];
-                                        if (!validarFecha(fecNac)) {
+                                        if (!validarFecha(vecTextoLeido[6])) {
                                             dniLeido = vecTextoLeido[1];
                                             apeLeido = vecTextoLeido[4];
                                             nomLeido = vecTextoLeido[5];
