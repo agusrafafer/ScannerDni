@@ -83,8 +83,11 @@
     
     <!--<plugin name="cordova-plugin-fcm-with-dependecy-updated" source="npm"/>
     <plugin spec="https://github.com/katzer/cordova-plugin-local-notifications.git" />
-    <plugin name="cordova-custom-config" source="npm"/>-->
-    <plugin name="phonegap-plugin-barcodescanner" source="npm" />
+    <plugin name="cordova-custom-config" source="npm"/>
+    <plugin name="phonegap-plugin-barcodescanner" source="npm" />-->
+    <plugin name="phonegap-plugin-barcodescanner2" source="npm">
+        <variable name="CAMERA_USAGE_DESCRIPTION" value=""/>
+    </plugin>
     <plugin name="cordova-plugin-file" source="npm" />
     <plugin name="cordova-plugin-ftp" source="npm" />
     
