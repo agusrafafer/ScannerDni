@@ -70,6 +70,7 @@ angular.module('app.controllers', [])
                                 reader.onloadend = function () {
                                     let vecTextoLeido = this.result.split("/\r?\n/");
                                     personaFactory.personasAutorizadas = vecTextoLeido.slice(1);//ignoro la cabecera del csv
+                                    console.log(JSON.stringify(personaFactory.personasAutorizadas));
                                 };
 
                                 reader.readAsText(file);
