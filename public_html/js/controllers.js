@@ -68,20 +68,7 @@ angular.module('app.controllers', [])
                                 var reader = new FileReader();
 
                                 reader.onloadend = function () {
-                                    let vecTextoLeido = this.result.split("/\t/");
-                                    personaFactory.personasAutorizadas = [];
-                                    for (let i = 0; i < vecTextoLeido.length; i++) {
-                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g, ""));
-                                    }
-                                    //personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
-                                    $ionicPopup.alert({
-                                        title: 'Texto de autorizados',
-                                        template: this.result
-                                    });
-                                    $ionicPopup.alert({
-                                        title: 'Lista de autorizados',
-                                        template: personaFactory.personasAutorizadas.length
-                                    });
+                                    personaFactory.personasAutorizadas = this.result;
                                 };
 
                                 reader.readAsText(file);
@@ -241,12 +228,10 @@ angular.module('app.controllers', [])
 
                                     if ($scope.var.textoLeido !== '') {
                                         var autorizada = false;
-                                        for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
-                                            if (personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[4] || personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[1]) {
-                                                autorizada = true;
-                                                break;
-                                            }
+                                        if(personaFactory.personasAutorizadas.indexOf(vecTextoLeido[1]) > -1 || personaFactory.personasAutorizadas.indexOf(vecTextoLeido[4]) > -1){
+                                            autorizada = true;
                                         }
+
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
                                             if ((personaFactory.personas[i].DNI === vecTextoLeido[4] || personaFactory.personas[i].DNI === vecTextoLeido[1])

@@ -4,7 +4,7 @@ angular.module('app.services', [])
                 return {
                     personaSel: '',
                     personas: [],
-                    personasAutorizadas: []
+                    personasAutorizadas: ""
                 };
             }])
         
