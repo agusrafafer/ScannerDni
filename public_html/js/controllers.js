@@ -310,7 +310,7 @@ angular.module('app.controllers', [])
                                         }
                                         let alertPopup = $ionicPopup.alert({
                                             title: 'Info',
-                                            template: (autorizada === true) ? 'Persona autorizada: <br/>' : 'Persona <b>NO</b> autorizada: <br/>' +
+                                            template: ((autorizada === true) ? 'Persona autorizada: <br/>' : 'Persona <b>NO</b> autorizada: <br/>') +
                                                     'DNI: ' + dniLeido + "<br/>" +
                                                     'Apellido: ' + apeLeido + "<br/>" +
                                                     'Nombre: ' + nomLeido
