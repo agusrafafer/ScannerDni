@@ -68,7 +68,7 @@ angular.module('app.controllers', [])
                                 var reader = new FileReader();
 
                                 reader.onloadend = function () {
-                                    let vecTextoLeido = this.result.split("/\r?\n/");
+                                    let vecTextoLeido = this.result.split(" ");
                                     personaFactory.personasAutorizadas = vecTextoLeido.slice(1);//ignoro la cabecera del csv
                                     console.log(JSON.stringify(personaFactory.personasAutorizadas));
                                     $ionicPopup.alert({
