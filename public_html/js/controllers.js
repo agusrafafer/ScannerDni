@@ -9,7 +9,7 @@ angular.module('app.controllers', [])
                 $scope.var = {
                     textoLeido: '',
                     formatoLeido: '',
-                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI;TIPO;FECHA;HORA;AUTORIZADOS\n',
+                    cabeceraCsv: 'TRAMITE;APELLIDO;NOMBRE;SEXO;DNI;EJEMPLAR;FECHA_NACIM;FECHA_EMISION_DNI;TIPO;FECHA;HORA;AUTORIZADO\n',
                     contenidoCsv: '',
                     pathCsv: '',
                     nombreLugar: '',
@@ -62,13 +62,13 @@ angular.module('app.controllers', [])
 
                 function cargaDatosInicial() {
                     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                        fs.root.getFile("Download/" + sesionFactory.nombreCSVautorizados, {create: false, exclusive: false}, function (fileEntry) {
+                        fs.root.getFile("Download" + sesionFactory.nombreCSVautorizados, {create: false, exclusive: false}, function (fileEntry) {
 
                             fileEntry.file(function (file) {
                                 var reader = new FileReader();
 
                                 reader.onloadend = function () {
-                                    let vecTextoLeido = this.result.split("/\r?\n/"); 
+                                    let vecTextoLeido = this.result.split("/\r?\n/");
                                     personaFactory.personasAutorizadas = vecTextoLeido.slice(1);//ignoro la cabecera del csv
                                 };
 
@@ -80,26 +80,6 @@ angular.module('app.controllers', [])
                                     title: 'Info',
                                     template: 'Error al leer el archivo de autorizados'
                                 });
-                            });
-
-                            fileEntry.createWriter(function (fileWriter) {
-
-                                fileWriter.onwriteend = function () {
-                                    $ionicLoading.hide();
-                                    $scope.subirArchivo(preguntarSiAbrirArchivoRemoto);
-                                };
-
-                                fileWriter.onerror = function (e) {
-                                    $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Info',
-                                        template: 'Error: ' + e.toString()
-                                    });
-                                };
-
-                                // Se crea un blob y luego se guarda el archivo
-                                let dataObj = new Blob([$scope.var.contenidoCsv], {type: 'text/plain'});
-                                fileWriter.write(dataObj);
                             });
 
                         }, function (errorCreateFile) {
@@ -160,28 +140,66 @@ angular.module('app.controllers', [])
                         });
 
                         $timeout(function () {
-                            cordova.plugin.ftp.connect(sesionFactory.urlFTP, sesionFactory.usuFTP, sesionFactory.passFTP, function (ok) {
-                                //alert("ftp: conexion ok=" + ok);
-                                cordova.plugin.ftp.download('/storage/emulated/0/Download/' + sesionFactory.nombreCSVautorizados, sesionFactory.nombreCSVautorizados, function (percent) {
-                                    if (percent === 1) {
-                                        cargaDatosInicial();
-                                    }
-                                }, function (error) {
+                            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                                fs.root.getFile("Download" + sesionFactory.nombreCSVautorizados, {create: true, exclusive: false}, function (fileEntry) {
+                                    // fileEntry.name == 'someFile.txt'
+                                    // fileEntry.fullPath == '/someFile.txt'
+                                    //$scope.var.pathCsv = fileEntry.fullPath;
+                                    fileEntry.createWriter(function (fileWriter) {
+
+                                        fileWriter.onwriteend = function () {
+                                            cordova.plugin.ftp.connect(sesionFactory.urlFTP, sesionFactory.usuFTP, sesionFactory.passFTP, function (ok) {
+                                                //alert("ftp: conexion ok=" + ok);
+                                                cordova.plugin.ftp.download('/storage/emulated/0/Download' + sesionFactory.nombreCSVautorizados, sesionFactory.nombreCSVautorizados, function (percent) {
+                                                    if (percent === 1) {
+                                                        cargaDatosInicial();
+                                                    }
+                                                }, function (error) {
+                                                    $ionicLoading.hide();
+                                                    $ionicPopup.alert({
+                                                        title: 'Info',
+                                                        template: "ftp: error en la descarga=" + error
+                                                    });
+                                                    cargaDatosInicial();
+                                                });
+
+                                            }, function (error) {
+                                                $ionicLoading.hide();
+                                                $ionicPopup.alert({
+                                                    title: 'Info',
+                                                    template: "ftp: error en la conexion=" + error
+                                                });
+                                                cargaDatosInicial();
+                                            });
+
+                                        };
+
+                                        fileWriter.onerror = function (e) {
+                                            $ionicLoading.hide();
+                                            $ionicPopup.alert({
+                                                title: 'Info',
+                                                template: 'Error: ' + e.toString()
+                                            });
+                                        };
+
+                                        // Se crea un blob y luego se guarda el archivo
+                                        let dataObj = new Blob([''], {type: 'text/plain'});
+                                        fileWriter.write(dataObj);
+                                    });
+
+                                }, function (errorCreateFile) {
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
                                         title: 'Info',
-                                        template: "ftp: error en la descarga=" + error
+                                        template: 'Error al crear el archivo'
                                     });
-                                    cargaDatosInicial();
                                 });
-
-                            }, function (error) {
+                            }, function (errorLoadFs) {
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Info',
-                                    template: "ftp: error en la conexion=" + error
+                                    template: 'Error al cargar el archivo'
                                 });
-                                cargaDatosInicial();
                             });
                         }, 1000);
                         //$ionicLoading.hide();
@@ -212,10 +230,10 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let autorizada = false;
                                         for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
-                                           if ((personaFactory.personasAutorizadas[i] === vecTextoLeido[4] || personaFactory.personasAutorizadas[i] === vecTextoLeido[1])){
-                                               autorizada = true;
-                                           } 
-                                        }                                        
+                                            if ((personaFactory.personasAutorizadas[i] === vecTextoLeido[4] || personaFactory.personasAutorizadas[i] === vecTextoLeido[1])) {
+                                                autorizada = true;
+                                            }
+                                        }
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
                                             if ((personaFactory.personas[i].DNI === vecTextoLeido[4] || personaFactory.personas[i].DNI === vecTextoLeido[1])
@@ -244,7 +262,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada?'1':'0'
+                                                    AUTORIZADO: autorizada ? '1' : '0'
                                                 });
                                             } else {
                                                 personaFactory.personas.push({
@@ -259,7 +277,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada?'1':'0'
+                                                    AUTORIZADO: autorizada ? '1' : '0'
                                                 });
                                             }
 
@@ -275,7 +293,7 @@ angular.module('app.controllers', [])
                                                         "TIPO": opcionEscaneo.toUpperCase(),
                                                         "FECHA": $scope.var.fecha,
                                                         "HORA": $scope.var.hora,
-                                                        "AUTORIZADO": autorizada?'1':'0'
+                                                        "AUTORIZADO": autorizada ? '1' : '0'
                                                     }
                                             ).then(function (results) {
 
@@ -294,7 +312,7 @@ angular.module('app.controllers', [])
                                         }
                                         let alertPopup = $ionicPopup.alert({
                                             title: 'Info',
-                                            template: autorizada?'Escaneo exitoso: <br/>':'Persona no autorizada: <br/>' +
+                                            template: autorizada ? 'Escaneo exitoso: <br/>' : 'Persona no autorizada: <br/>' +
                                                     'DNI: ' + dniLeido + "<br/>" +
                                                     'Apellido: ' + apeLeido + "<br/>" +
                                                     'Nombre: ' + nomLeido
