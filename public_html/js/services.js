@@ -15,7 +15,7 @@ angular.module('app.services', [])
                     urlFTP: 'ftp.agurait.com',
                     usuFTP: 'u542060829.escaner',
                     passFTP: 'escaner',
-                    nombreCSVautorizados: 'autorizados.csv'
+                    nombreCSVautorizados: '/autorizados.csv'
                 };
             }])
 
