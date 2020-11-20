@@ -69,7 +69,11 @@ angular.module('app.controllers', [])
 
                                 reader.onloadend = function () {
                                     let vecTextoLeido = this.result.split("/\r|\n|\t/");
-                                    personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
+                                    personaFactory.personasAutorizadas = [];
+                                    for (let i = 0; i < vecTextoLeido.length; i++) {
+                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g,''));
+                                    }
+                                    //personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
                                     $ionicPopup.alert({
                                         title: 'Texto de autorizados',
                                         template: this.result
@@ -238,8 +242,9 @@ angular.module('app.controllers', [])
                                     if ($scope.var.textoLeido !== '') {
                                         let autorizada = false;
                                         for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
-                                            if ((personaFactory.personasAutorizadas[i] === vecTextoLeido[4] || personaFactory.personasAutorizadas[i] === vecTextoLeido[1])) {
+                                            if ((personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[4] || personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[1])) {
                                                 autorizada = true;
+                                                break;
                                             }
                                         }
                                         let existe = false;
@@ -270,7 +275,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada ? '1' : '0'
+                                                    AUTORIZADO: autorizada ? 'SI' : 'NO'
                                                 });
                                             } else {
                                                 personaFactory.personas.push({
@@ -285,7 +290,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada ? '1' : '0'
+                                                    AUTORIZADO: autorizada ? 'SI' : 'NO'
                                                 });
                                             }
 
@@ -301,7 +306,7 @@ angular.module('app.controllers', [])
                                                         "TIPO": opcionEscaneo.toUpperCase(),
                                                         "FECHA": $scope.var.fecha,
                                                         "HORA": $scope.var.hora,
-                                                        "AUTORIZADO": autorizada ? '1' : '0'
+                                                        "AUTORIZADO": autorizada ? 'SI' : 'NO'
                                                     }
                                             ).then(function (results) {
 
