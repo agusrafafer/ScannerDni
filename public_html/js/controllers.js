@@ -68,10 +68,10 @@ angular.module('app.controllers', [])
                                 var reader = new FileReader();
 
                                 reader.onloadend = function () {
-                                    let vecTextoLeido = this.result.split("/\r|\n|\t/");
+                                    let vecTextoLeido = this.result.split("/\t/");
                                     personaFactory.personasAutorizadas = [];
                                     for (let i = 0; i < vecTextoLeido.length; i++) {
-                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g, ''));
+                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g, ""));
                                     }
                                     //personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
                                     $ionicPopup.alert({
