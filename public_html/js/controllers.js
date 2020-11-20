@@ -80,7 +80,7 @@ angular.module('app.controllers', [])
                                     });
                                     $ionicPopup.alert({
                                         title: 'Lista de autorizados',
-                                        template: personaFactory.personasAutorizadas
+                                        template: personaFactory.personasAutorizadas.length
                                     });
                                 };
 
@@ -244,10 +244,6 @@ angular.module('app.controllers', [])
                                         for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
                                             if (personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[4] || personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[1]) {
                                                 autorizada = true;
-                                                $ionicPopup.alert({
-                                                    title: 'Info',
-                                                    template: personaFactory.personasAutorizadas[i]
-                                                });
                                                 break;
                                             }
                                         }
