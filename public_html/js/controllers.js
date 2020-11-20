@@ -69,15 +69,19 @@ angular.module('app.controllers', [])
 
                                 reader.onloadend = function () {
                                     let vecTextoLeido = this.result.split(" ");
-                                    personaFactory.personasAutorizadas = vecTextoLeido.slice(1);//ignoro la cabecera del csv
+                                    personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
                                     console.log(JSON.stringify(personaFactory.personasAutorizadas));
                                     $ionicPopup.alert({
                                         title: 'Texto de autorizados',
                                         template: this.result
                                     });
                                     $ionicPopup.alert({
-                                        title: 'Lista de autorizados',
-                                        template: JSON.stringify(personaFactory.personasAutorizadas)
+                                        title: 'cant lista de autorizados',
+                                        template: vecTextoLeido.length
+                                    });
+                                    $ionicPopup.alert({
+                                        title: 'cant personas autorizados',
+                                        template: personaFactory.personasAutorizadas.length
                                     });
                                 };
 
