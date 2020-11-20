@@ -3,14 +3,19 @@ angular.module('app.services', [])
         .factory('personaFactory', [function () {
                 return {
                     personaSel: '',
-                    personas: []
+                    personas: [],
+                    personasAutorizadas: []
                 };
             }])
         
         .factory('sesionFactory', [function () {
                 return {
                     contador: 0,
-                    nombreLugar: ''
+                    nombreLugar: '',
+                    urlFTP: 'ftp.agurait.com',
+                    usuFTP: 'u542060829.escaner',
+                    passFTP: 'escaner',
+                    nombreCSVautorizados: 'autorizados.csv'
                 };
             }])
 

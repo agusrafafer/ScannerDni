@@ -72,6 +72,10 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
                     "HORA": {
                         "type": "TEXT",
                         "null": "NOT NULL"
+                    }, 
+                    "AUTORIZADO": {
+                        "type": "TEXT",
+                        "null": "NOT NULL"
                     }
                     
                 });
