@@ -71,7 +71,7 @@ angular.module('app.controllers', [])
                                     let vecTextoLeido = this.result.split("/\r|\n|\t/");
                                     personaFactory.personasAutorizadas = [];
                                     for (let i = 0; i < vecTextoLeido.length; i++) {
-                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g,''));
+                                        personaFactory.personasAutorizadas.push(vecTextoLeido[i].replace(/\n/g, ''));
                                     }
                                     //personaFactory.personasAutorizadas = vecTextoLeido;//ignoro la cabecera del csv
                                     $ionicPopup.alert({
@@ -80,7 +80,7 @@ angular.module('app.controllers', [])
                                     });
                                     $ionicPopup.alert({
                                         title: 'Lista de autorizados',
-                                        template: JSON.stringify(personaFactory.personasAutorizadas)
+                                        template: personaFactory.personasAutorizadas
                                     });
                                 };
 
@@ -240,10 +240,14 @@ angular.module('app.controllers', [])
                                     let vecTextoLeido = $scope.var.textoLeido.split(";");
 
                                     if ($scope.var.textoLeido !== '') {
-                                        let autorizada = false;
+                                        var autorizada = false;
                                         for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
-                                            if ((personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[4] || personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[1])) {
+                                            if (personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[4] || personaFactory.personasAutorizadas[i].toString() === vecTextoLeido[1]) {
                                                 autorizada = true;
+                                                $ionicPopup.alert({
+                                                    title: 'Info',
+                                                    template: personaFactory.personasAutorizadas[i]
+                                                });
                                                 break;
                                             }
                                         }
@@ -325,7 +329,7 @@ angular.module('app.controllers', [])
                                         }
                                         let alertPopup = $ionicPopup.alert({
                                             title: 'Info',
-                                            template: autorizada ? 'Escaneo exitoso: <br/>' : 'Persona no autorizada: <br/>' +
+                                            template: (autorizada === true) ? 'Persona autorizada: <br/>' : 'Persona <b>NO</b> autorizada: <br/>' +
                                                     'DNI: ' + dniLeido + "<br/>" +
                                                     'Apellido: ' + apeLeido + "<br/>" +
                                                     'Nombre: ' + nomLeido
