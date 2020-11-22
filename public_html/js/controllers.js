@@ -68,8 +68,7 @@ angular.module('app.controllers', [])
                                 var reader = new FileReader();
 
                                 reader.onloadend = function () {
-                                    let vecTextoLeido = this.result.split("/\r?\n/");
-                                    personaFactory.personasAutorizadas = vecTextoLeido.slice(1);//ignoro la cabecera del csv
+                                    personaFactory.personasAutorizadas = this.result;
                                 };
 
                                 reader.readAsText(file);
@@ -228,12 +227,11 @@ angular.module('app.controllers', [])
                                     let vecTextoLeido = $scope.var.textoLeido.split(";");
 
                                     if ($scope.var.textoLeido !== '') {
-                                        let autorizada = false;
-                                        for (let i = 0; i < personaFactory.personasAutorizadas.length; i++) {
-                                            if ((personaFactory.personasAutorizadas[i] === vecTextoLeido[4] || personaFactory.personasAutorizadas[i] === vecTextoLeido[1])) {
-                                                autorizada = true;
-                                            }
+                                        var autorizada = false;
+                                        if(personaFactory.personasAutorizadas.indexOf(vecTextoLeido[1]) > -1 || personaFactory.personasAutorizadas.indexOf(vecTextoLeido[4]) > -1){
+                                            autorizada = true;
                                         }
+
                                         let existe = false;
                                         for (let i = 0; i < personaFactory.personas.length; i++) {
                                             if ((personaFactory.personas[i].DNI === vecTextoLeido[4] || personaFactory.personas[i].DNI === vecTextoLeido[1])
@@ -262,7 +260,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada ? '1' : '0'
+                                                    AUTORIZADO: autorizada ? 'SI' : 'NO'
                                                 });
                                             } else {
                                                 personaFactory.personas.push({
@@ -277,7 +275,7 @@ angular.module('app.controllers', [])
                                                     TIPO: opcionEscaneo.toUpperCase(),
                                                     FECHA: $scope.var.fecha,
                                                     HORA: $scope.var.hora,
-                                                    AUTORIZADO: autorizada ? '1' : '0'
+                                                    AUTORIZADO: autorizada ? 'SI' : 'NO'
                                                 });
                                             }
 
@@ -293,7 +291,7 @@ angular.module('app.controllers', [])
                                                         "TIPO": opcionEscaneo.toUpperCase(),
                                                         "FECHA": $scope.var.fecha,
                                                         "HORA": $scope.var.hora,
-                                                        "AUTORIZADO": autorizada ? '1' : '0'
+                                                        "AUTORIZADO": autorizada ? 'SI' : 'NO'
                                                     }
                                             ).then(function (results) {
 
@@ -312,7 +310,7 @@ angular.module('app.controllers', [])
                                         }
                                         let alertPopup = $ionicPopup.alert({
                                             title: 'Info',
-                                            template: autorizada ? 'Escaneo exitoso: <br/>' : 'Persona no autorizada: <br/>' +
+                                            template: ((autorizada === true) ? 'Persona autorizada: <br/>' : 'Persona <b>NO</b> autorizada: <br/>') +
                                                     'DNI: ' + dniLeido + "<br/>" +
                                                     'Apellido: ' + apeLeido + "<br/>" +
                                                     'Nombre: ' + nomLeido
